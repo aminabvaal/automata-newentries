@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ir.ac.aut.god</groupId>
-    <artifactId>automata-newentries</artifactId>
+    <artifactId>AG-newentries</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>automata-newentries</name>
     <description>for Saberi And Sedeghat Relaxing</description>
@@ -19,6 +19,30 @@
     </properties>
 
     <dependencies>
+
+
+        <!-- https://mvnrepository.com/artifact/net.time4j/time4j-core -->
+        <dependency>
+            <groupId>net.time4j</groupId>
+            <artifactId>time4j-core</artifactId>
+            <version>4.38</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/net.time4j/time4j-calendar -->
+        <dependency>
+            <groupId>net.time4j</groupId>
+            <artifactId>time4j-calendar</artifactId>
+            <version>4.38</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/net.time4j/time4j-ui -->
+        <dependency>
+            <groupId>net.time4j</groupId>
+            <artifactId>time4j-ui</artifactId>
+            <version>4.38</version>
+        </dependency>
+
+
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
