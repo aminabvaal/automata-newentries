@@ -66,8 +66,13 @@ public class ExcelReader {
 
         for (Integer prio : prios) {
             School school = schools.get(prio);
-            school.getNeededClasses().get(0)
+            ArrayList<Class> takableClasses = school.getTakableClasses();
+            ArrayList<NeededClass> neededClasses = school.getNeededClasses();
 
+            for (NeededClass neededClass : neededClasses) {
+                ArrayList<Class> earlyTimeOfCourses = getEarlyTimeOfCourses(takableClasses, neededClass);
+
+            }
 
 
         }
@@ -79,13 +84,15 @@ public class ExcelReader {
         ArrayList<CapSchool> caps = capsOfSchools();
 
         caps.forEach(capSchool -> {
+
             String schoolName = capSchool.getSchoolName();
+
             schools.stream().filter(school -> school.getName().replaceAll(" ", "")
                     .equals(schoolName.replaceAll(" ", "")))
                     .forEach(school -> {
                         school.getCapSchools().add(capSchool);
                     });
-            ;
+
 
         });
 
@@ -108,6 +115,21 @@ public class ExcelReader {
         //    s();
 //        cap();
         System.exit(0);
+
+    }
+
+    private static ArrayList<Class> getEarlyTimeOfCourses(ArrayList<Class> takableClasses, NeededClass neededClass) {
+
+        for (Class takableClass : takableClasses) {
+            ArrayList<String> times = takableClass.getTimes();
+            String time = times.get(0);
+            String[] split = time.split("_");
+            split[]
+
+
+        }
+
+
 
     }
 
