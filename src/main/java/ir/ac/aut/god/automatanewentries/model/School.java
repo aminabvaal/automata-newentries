@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class School {
     private String name;
     private String code;
+    private boolean fromFirstSchool;
     private ArrayList<NeededClass> neededClasses;
 
 }
