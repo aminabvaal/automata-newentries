@@ -120,6 +120,7 @@ public class ExcelReader {
 
     private static ArrayList<Class> getEarlyTimeOfCourses(ArrayList<Class> takableClasses, NeededClass neededClass) {
         ArrayList<Integer> whitchtiomes = new ArrayList<>();
+        ArrayList<Integer> sortedwhitchtiomes = new ArrayList<>();
 
         for (Class takableClass : takableClasses) {
             ArrayList<String> times = takableClass.getTimes();
@@ -128,11 +129,16 @@ public class ExcelReader {
             String t = split[0].split("t")[1];
             int i = Integer.parseInt(t);
             int i1 = Integer.parseInt(split[1]);
-            int i2= Integer.parseInt(split[2]);
+            int i2 = Integer.parseInt(split[2]);
             int timeofcourse = i * 2000 + i1;
             whitchtiomes.add(timeofcourse);
+            sortedwhitchtiomes.add(timeofcourse);
         }
 
+        Collections.sort(sortedwhitchtiomes);
+
+
+        gout(sortedwhitchtiomes);
         gout(whitchtiomes);
         return null;
 
@@ -373,6 +379,22 @@ public class ExcelReader {
 
         workbook.close();
         return classes;
+    }
+
+
+    public static int indexOfdmin(ArrayList<Double> doubles) {
+        double m = 1.0D / 0.0;
+        int var4 = doubles.size();
+        int k = -1;
+
+        for (int var5 = 0; var5 < var4; ++var5) {
+            double v = doubles.get(var5);
+            m = Math.min(v, m);
+            if (m == v)
+                k = var5;
+
+        }
+        return k;
     }
 
 
