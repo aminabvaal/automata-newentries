@@ -119,17 +119,22 @@ public class ExcelReader {
     }
 
     private static ArrayList<Class> getEarlyTimeOfCourses(ArrayList<Class> takableClasses, NeededClass neededClass) {
+        ArrayList<Integer> whitchtiomes = new ArrayList<>();
 
         for (Class takableClass : takableClasses) {
             ArrayList<String> times = takableClass.getTimes();
             String time = times.get(0);
             String[] split = time.split("_");
-            split[]
-
-
+            String t = split[0].split("t")[1];
+            int i = Integer.parseInt(t);
+            int i1 = Integer.parseInt(split[1]);
+            int i2= Integer.parseInt(split[2]);
+            int timeofcourse = i * 2000 + i1;
+            whitchtiomes.add(timeofcourse);
         }
 
-
+        gout(whitchtiomes);
+        return null;
 
     }
 
