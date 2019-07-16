@@ -16,12 +16,15 @@ import java.util.ArrayList;
 @Accessors(chain = true)
 public class Class {
     private String name;
-    private String id;
+    private String courseId;
     private String group;
     private EntranceType entranceType;
+    private PazireshType pazireshType;
+    private SEX sex;
     private ArrayList<TimeOf> InvolovingTimes;
     private ArrayList<String> times;
     private TimeOf finalExamTime;
+    private ExamTime examTime;
     private int capacity;
     private int maxCapacity;
     private int minCapacity;

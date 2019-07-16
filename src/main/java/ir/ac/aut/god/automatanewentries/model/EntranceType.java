@@ -5,7 +5,7 @@ package ir.ac.aut.god.automatanewentries.model;
  */
 
 public enum EntranceType {
-    KHODGARDAN(2700), TYPICAL(63626), BOTH(1);
+    Ghadim(2700), Jadid(63626), BOTH(1);
 
     private int code;
 

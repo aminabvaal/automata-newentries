@@ -16,4 +16,7 @@ public class School {
     private boolean fromFirstSchool;
     private ArrayList<NeededClass> neededClasses;
 
+    private ArrayList<CapSchool> capSchools = new ArrayList<>(0);
+
+
 }

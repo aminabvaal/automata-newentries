@@ -1,10 +1,8 @@
 package ir.ac.aut.god.automatanewentries.core;
 
 import com.google.gson.Gson;
-import ir.ac.aut.god.automatanewentries.model.CapSchool;
-import ir.ac.aut.god.automatanewentries.model.NeededClass;
-import ir.ac.aut.god.automatanewentries.model.PazireshType;
-import ir.ac.aut.god.automatanewentries.model.School;
+import ir.ac.aut.god.automatanewentries.model.*;
+import ir.ac.aut.god.automatanewentries.model.Class;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 
@@ -22,7 +20,16 @@ public class ExcelReader {
 
     }
 
+    public static void exit() {
+        System.exit(0);
+
+    }
+
     public static void main(String[] args) throws IOException, InvalidFormatException {
+
+
+        freshEnrollCourses();
+        exit();
 
 
         ArrayList<School> schools = prepareSchools();
@@ -30,14 +37,17 @@ public class ExcelReader {
 
         caps.forEach(capSchool -> {
             String schoolName = capSchool.getSchoolName();
-            schools.stream().filter(school -> school.getName().replaceAll("","")
-                    .equals(schoolName.replaceAll("","")))
-                    .forEach(ExcelReader::gout);
+            schools.stream().filter(school -> school.getName().replaceAll(" ", "")
+                    .equals(schoolName.replaceAll(" ", "")))
+                    .forEach(school -> {
+                        school.getCapSchools().add(capSchool);
+                    });
             ;
-
 
         });
 
+
+        gout(schools);
 
 //        prepareSchools();
 //        System.exit(0);
@@ -133,7 +143,7 @@ public class ExcelReader {
     }
 
 
-    public static void dd() throws IOException, InvalidFormatException {
+    public static void freshEnrollCourses() throws IOException, InvalidFormatException {
 
 
         String SAMPLE_XLSX_FILE_PATH = "conf/freshEnrollCourses.xlsx";
@@ -177,11 +187,11 @@ public class ExcelReader {
             } catch (Exception e) {
                 System.out.printf(e.getLocalizedMessage());
             }
-            System.out.println(hashing.keySet().size());
+//            System.out.println(hashing.keySet().size());
         }
-        System.out.println(css.size());
-        System.out.println(tss.size());
-        System.out.println(hash.keySet().size());
+//        System.out.println(css.size());
+//        System.out.println(tss.size());
+//        System.out.println(hash.keySet().size());
 
 
         for (Row row : sheetAt0) {
@@ -195,8 +205,6 @@ public class ExcelReader {
 
 
                 String id = courseId + "__" + groupId;
-
-                System.out.println(new Gson().toJson(hash.get(id)));
 
 
                 String firstTime = "t" + dataFormatter.formatCellValue(row.getCell(9))
@@ -226,11 +234,49 @@ public class ExcelReader {
 
                 String timeofStartExam = dataFormatter.formatCellValue(row.getCell(19));
                 String timeofStopExam = dataFormatter.formatCellValue(row.getCell(20));
+
+                ExamTime examTime = new ExamTime().setDay(Integer.parseInt(day))
+                        .setFinishTime(Integer.parseInt(timeofStopExam))
+                        .setStartTime(Integer.parseInt(timeofStartExam))
+                        .setMonth(Integer.parseInt(month))
+                        .setYear(Integer.parseInt(year));
+
+
                 String capacity = dataFormatter.formatCellValue(row.getCell(21));
 
 
                 System.out.println(new Gson().toJson(times));
                 System.out.println(new Gson().toJson(dateOfExam));
+
+
+                Class aClass = new Class();
+
+                aClass.setCapacity(Integer.parseInt(capacity))
+                        .setName(courseName)
+                        .setCourseId(courseId)
+                        .setGroup(groupId)
+                        .setExamTime(examTime)
+                        .setTimes(times);
+
+
+                if (sexualCode.equals(String.valueOf(SEX.BOTH.getCode()))) {
+                    aClass.setSex(SEX.BOTH);
+
+                } else if (sexualCode.equals(String.valueOf(SEX.MALE.getCode()))) {
+                    aClass.setSex(SEX.MALE);
+
+                } else {
+                    aClass.setSex(SEX.WOMEN);
+                }
+                if (pazireshCode.equals(String.valueOf(PazireshType.Both.getCode()))) {
+                    aClass.setPazireshType(PazireshType.Both);
+
+                } else if (pazireshCode.equals(String.valueOf(PazireshType.Pardis.getCode()))) {
+                    aClass.setPazireshType(PazireshType.Pardis);
+
+                } else {
+                    aClass.setPazireshType(PazireshType.Awdi);
+                }
 
 
             } catch (Exception e) {
