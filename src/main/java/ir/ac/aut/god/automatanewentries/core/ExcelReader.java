@@ -28,12 +28,51 @@ public class ExcelReader {
     public static void main(String[] args) throws IOException, InvalidFormatException {
 
 
-        freshEnrollCourses();
+        ArrayList<Class> classes = freshEnrollCourses();
+        ArrayList<School> schools = prepareSchools();
+        School school1 = schools.get(0);
+        ArrayList<Integer> prios = new ArrayList<>();
+        for (int i = 0; i < schools.size(); i++) {
+            if (schools.get(i).isFromFirstSchool())
+                prios.add(i);
+        }
+
+        for (Integer prio : prios) {
+            School school = schools.get(prio);
+
+            ArrayList<Class> takableClasses = new ArrayList<>();
+
+
+            ArrayList<NeededClass> neededClasses = school.getNeededClasses();
+            for (NeededClass neededClass : neededClasses) {
+                for (Class aClass : classes) {
+                    if (aClass.getCourseId().equals(neededClass.getCourseId())) {
+                        if (neededClass.getPossibleGroups()==null){
+                            takableClasses.add(aClass);
+                        }
+                        else {
+                            for (Integer possibleGroup : neededClass.getPossibleGroups()) {
+                                if (possibleGroup == Integer.parseInt(aClass.getGroup())) {
+                                    takableClasses.add(aClass);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            school.setTakableClasses(takableClasses);
+        }
+
+        gout(schools);
+
+
+
+
+
         exit();
 
 
-        ArrayList<School> schools = prepareSchools();
-        ArrayList<CapSchool> caps = cap();
+        ArrayList<CapSchool> caps = capsOfSchools();
 
         caps.forEach(capSchool -> {
             String schoolName = capSchool.getSchoolName();
@@ -69,7 +108,7 @@ public class ExcelReader {
     }
 
 
-    public static ArrayList<CapSchool> cap() throws IOException, InvalidFormatException {
+    public static ArrayList<CapSchool> capsOfSchools() throws IOException, InvalidFormatException {
 
         ArrayList<CapSchool> capSchools = new ArrayList<>();
 
@@ -143,7 +182,7 @@ public class ExcelReader {
     }
 
 
-    public static void freshEnrollCourses() throws IOException, InvalidFormatException {
+    public static ArrayList<Class> freshEnrollCourses() throws IOException, InvalidFormatException {
 
 
         String SAMPLE_XLSX_FILE_PATH = "conf/freshEnrollCourses.xlsx";
@@ -154,7 +193,7 @@ public class ExcelReader {
         HashMap<String, ArrayList<String>> hash = new HashMap<>();
         DataFormatter dataFormatter = new DataFormatter();
         ArrayList<String> css = new ArrayList<>();
-        ArrayList<String> tss = new ArrayList<>();
+        ArrayList<String> tas = new ArrayList<>();
 
         for (Row row : sheetAt1) {
             try {
@@ -169,7 +208,7 @@ public class ExcelReader {
 
 
                 css.add(sepCourse);
-                tss.add(sepTadrisyar);
+                tas.add(sepTadrisyar);
 
 
                 if (hash.containsKey(sepCourse)) {
@@ -190,11 +229,14 @@ public class ExcelReader {
 //            System.out.println(hashing.keySet().size());
         }
 //        System.out.println(css.size());
-//        System.out.println(tss.size());
+//        System.out.println(tas.size());
 //        System.out.println(hash.keySet().size());
 
+        ArrayList<Class> classes = new ArrayList<>();
 
+        int kkk=0;
         for (Row row : sheetAt0) {
+            kkk++;
             try {
                 ArrayList<String> times = new ArrayList<>();
                 String courseName = dataFormatter.formatCellValue(row.getCell(0));
@@ -227,6 +269,10 @@ public class ExcelReader {
                 }
 
                 String dateOfExam = dataFormatter.formatCellValue(row.getCell(18));
+
+                if (dateOfExam.isEmpty())
+                    continue;
+
                 String[] tarikh = dateOfExam.split("/");
                 String year = tarikh[0];
                 String month = tarikh[1];
@@ -251,8 +297,13 @@ public class ExcelReader {
 
                 Class aClass = new Class();
 
-                aClass.setCapacity(Integer.parseInt(capacity))
+                aClass
+                        .setCapacity(Integer.parseInt(capacity))
+                        .setMaxCapacity(Integer.parseInt(capacity))
+                        .setMinCapacity(Integer.parseInt(capacity))
+                        .setBlankCapacity((0))
                         .setName(courseName)
+                        .setId(id)
                         .setCourseId(courseId)
                         .setGroup(groupId)
                         .setExamTime(examTime)
@@ -278,15 +329,19 @@ public class ExcelReader {
                     aClass.setPazireshType(PazireshType.Awdi);
                 }
 
+                gout(aClass);
+                classes.add(aClass);
 
             } catch (Exception e) {
-
+                System.err.println(e.toString());
             }
 
         }
+        System.out.println("kkkk "+kkk);
 
 
         workbook.close();
+        return classes;
     }
 
 

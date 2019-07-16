@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class Class {
     private String name;
     private String courseId;
+    private String id;
     private String group;
     private EntranceType entranceType;
     private PazireshType pazireshType;
@@ -26,6 +27,7 @@ public class Class {
     private TimeOf finalExamTime;
     private ExamTime examTime;
     private int capacity;
+    private int blankCapacity;
     private int maxCapacity;
     private int minCapacity;
 
