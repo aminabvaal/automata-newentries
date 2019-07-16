@@ -17,7 +17,7 @@ public class School {
     private ArrayList<NeededClass> neededClasses;
 
     private ArrayList<CapSchool> capSchools = new ArrayList<>(0);
-    ArrayList<Class> takableClasses;
+    private ArrayList<Class> takableClasses;
 
 
 }

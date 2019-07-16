@@ -47,10 +47,9 @@ public class ExcelReader {
             for (NeededClass neededClass : neededClasses) {
                 for (Class aClass : classes) {
                     if (aClass.getCourseId().equals(neededClass.getCourseId())) {
-                        if (neededClass.getPossibleGroups()==null){
+                        if (neededClass.getPossibleGroups() == null) {
                             takableClasses.add(aClass);
-                        }
-                        else {
+                        } else {
                             for (Integer possibleGroup : neededClass.getPossibleGroups()) {
                                 if (possibleGroup == Integer.parseInt(aClass.getGroup())) {
                                     takableClasses.add(aClass);
@@ -62,11 +61,16 @@ public class ExcelReader {
             }
             school.setTakableClasses(takableClasses);
         }
-
         gout(schools);
 
 
+        for (Integer prio : prios) {
+            School school = schools.get(prio);
+            school.getNeededClasses().get(0)
 
+
+
+        }
 
 
         exit();
@@ -234,7 +238,7 @@ public class ExcelReader {
 
         ArrayList<Class> classes = new ArrayList<>();
 
-        int kkk=0;
+        int kkk = 0;
         for (Row row : sheetAt0) {
             kkk++;
             try {
@@ -337,7 +341,7 @@ public class ExcelReader {
             }
 
         }
-        System.out.println("kkkk "+kkk);
+        System.out.println("kkkk " + kkk);
 
 
         workbook.close();
