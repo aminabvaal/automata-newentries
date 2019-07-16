@@ -32,9 +32,6 @@ public class ExcelReader {
         ArrayList<School> schools = prepareSchools();
         School school1 = schools.get(0);
         ArrayList<Integer> prios = new ArrayList<>();
-        https://internet.aut.ac.ir/
-            ag1992  kingamin1372620
-                    
         for (int i = 0; i < schools.size(); i++) {
             if (schools.get(i).isFromFirstSchool())
                 prios.add(i);
@@ -43,16 +40,30 @@ public class ExcelReader {
         for (Integer prio : prios) {
             School school = schools.get(prio);
 
+            ArrayList<Class> takableClasses = new ArrayList<>();
+
 
             ArrayList<NeededClass> neededClasses = school.getNeededClasses();
             for (NeededClass neededClass : neededClasses) {
-
+                for (Class aClass : classes) {
+                    if (aClass.getCourseId().equals(neededClass.getCourseId())) {
+                        if (neededClass.getPossibleGroups()==null){
+                            takableClasses.add(aClass);
+                        }
+                        else {
+                            for (Integer possibleGroup : neededClass.getPossibleGroups()) {
+                                if (possibleGroup == Integer.parseInt(aClass.getGroup())) {
+                                    takableClasses.add(aClass);
+                                }
+                            }
+                        }
+                    }
+                }
             }
-
-
-
-
+            school.setTakableClasses(takableClasses);
         }
+
+        gout(schools);
 
 
 
@@ -223,7 +234,9 @@ public class ExcelReader {
 
         ArrayList<Class> classes = new ArrayList<>();
 
+        int kkk=0;
         for (Row row : sheetAt0) {
+            kkk++;
             try {
                 ArrayList<String> times = new ArrayList<>();
                 String courseName = dataFormatter.formatCellValue(row.getCell(0));
@@ -256,6 +269,10 @@ public class ExcelReader {
                 }
 
                 String dateOfExam = dataFormatter.formatCellValue(row.getCell(18));
+
+                if (dateOfExam.isEmpty())
+                    continue;
+
                 String[] tarikh = dateOfExam.split("/");
                 String year = tarikh[0];
                 String month = tarikh[1];
@@ -316,10 +333,11 @@ public class ExcelReader {
                 classes.add(aClass);
 
             } catch (Exception e) {
-
+                System.err.println(e.toString());
             }
 
         }
+        System.out.println("kkkk "+kkk);
 
 
         workbook.close();
