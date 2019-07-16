@@ -15,6 +15,7 @@ public class NeededClass {
     private String courseName;
     private String courseId;
     private PazireshType pazireshType;
+    private int pazireshTypeNumber;
     private int priotryOfPardisType;
     private int priotryOfAwdiType;
     private ArrayList<Integer> possibleGroups;//needed or required groups must be considered

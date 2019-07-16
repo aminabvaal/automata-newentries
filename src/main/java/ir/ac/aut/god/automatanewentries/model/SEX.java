@@ -5,5 +5,16 @@ package ir.ac.aut.god.automatanewentries.model;
  */
 
 public enum SEX {
-    MALE,WOMEN,BOTH
+    MALE(2601),WOMEN(260),BOTH(2600);
+
+
+    private int code;
+
+    SEX(int i) {
+        this.code = i;
+    }
+
+    public int getCode() {
+        return code;
+    }
 }
