@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class Class {
     private String name;
     private String courseId;
+    private String id;
     private String group;
     private EntranceType entranceType;
     private PazireshType pazireshType;

@@ -251,8 +251,12 @@ public class ExcelReader {
 
                 Class aClass = new Class();
 
-                aClass.setCapacity(Integer.parseInt(capacity))
+                aClass
+                        .setCapacity(Integer.parseInt(capacity))
+                        .setMaxCapacity(Integer.parseInt(capacity))
+                        .setMinCapacity(Integer.parseInt(capacity))
                         .setName(courseName)
+                        .setId(id)
                         .setCourseId(courseId)
                         .setGroup(groupId)
                         .setExamTime(examTime)
@@ -277,6 +281,8 @@ public class ExcelReader {
                 } else {
                     aClass.setPazireshType(PazireshType.Awdi);
                 }
+
+                gout(aClass);
 
 
             } catch (Exception e) {
