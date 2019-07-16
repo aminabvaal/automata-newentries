@@ -27,6 +27,7 @@ public class Class {
     private TimeOf finalExamTime;
     private ExamTime examTime;
     private int capacity;
+    private int blankCapacity;
     private int maxCapacity;
     private int minCapacity;
 

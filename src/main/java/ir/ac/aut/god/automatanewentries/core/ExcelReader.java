@@ -28,12 +28,40 @@ public class ExcelReader {
     public static void main(String[] args) throws IOException, InvalidFormatException {
 
 
-        freshEnrollCourses();
+        ArrayList<Class> classes = freshEnrollCourses();
+        ArrayList<School> schools = prepareSchools();
+        School school1 = schools.get(0);
+        ArrayList<Integer> prios = new ArrayList<>();
+        https://internet.aut.ac.ir/
+            ag1992  kingamin1372620
+                    
+        for (int i = 0; i < schools.size(); i++) {
+            if (schools.get(i).isFromFirstSchool())
+                prios.add(i);
+        }
+
+        for (Integer prio : prios) {
+            School school = schools.get(prio);
+
+
+            ArrayList<NeededClass> neededClasses = school.getNeededClasses();
+            for (NeededClass neededClass : neededClasses) {
+
+            }
+
+
+
+
+        }
+
+
+
+
+
         exit();
 
 
-        ArrayList<School> schools = prepareSchools();
-        ArrayList<CapSchool> caps = cap();
+        ArrayList<CapSchool> caps = capsOfSchools();
 
         caps.forEach(capSchool -> {
             String schoolName = capSchool.getSchoolName();
@@ -69,7 +97,7 @@ public class ExcelReader {
     }
 
 
-    public static ArrayList<CapSchool> cap() throws IOException, InvalidFormatException {
+    public static ArrayList<CapSchool> capsOfSchools() throws IOException, InvalidFormatException {
 
         ArrayList<CapSchool> capSchools = new ArrayList<>();
 
@@ -143,7 +171,7 @@ public class ExcelReader {
     }
 
 
-    public static void freshEnrollCourses() throws IOException, InvalidFormatException {
+    public static ArrayList<Class> freshEnrollCourses() throws IOException, InvalidFormatException {
 
 
         String SAMPLE_XLSX_FILE_PATH = "conf/freshEnrollCourses.xlsx";
@@ -154,7 +182,7 @@ public class ExcelReader {
         HashMap<String, ArrayList<String>> hash = new HashMap<>();
         DataFormatter dataFormatter = new DataFormatter();
         ArrayList<String> css = new ArrayList<>();
-        ArrayList<String> tss = new ArrayList<>();
+        ArrayList<String> tas = new ArrayList<>();
 
         for (Row row : sheetAt1) {
             try {
@@ -169,7 +197,7 @@ public class ExcelReader {
 
 
                 css.add(sepCourse);
-                tss.add(sepTadrisyar);
+                tas.add(sepTadrisyar);
 
 
                 if (hash.containsKey(sepCourse)) {
@@ -190,9 +218,10 @@ public class ExcelReader {
 //            System.out.println(hashing.keySet().size());
         }
 //        System.out.println(css.size());
-//        System.out.println(tss.size());
+//        System.out.println(tas.size());
 //        System.out.println(hash.keySet().size());
 
+        ArrayList<Class> classes = new ArrayList<>();
 
         for (Row row : sheetAt0) {
             try {
@@ -255,6 +284,7 @@ public class ExcelReader {
                         .setCapacity(Integer.parseInt(capacity))
                         .setMaxCapacity(Integer.parseInt(capacity))
                         .setMinCapacity(Integer.parseInt(capacity))
+                        .setBlankCapacity((0))
                         .setName(courseName)
                         .setId(id)
                         .setCourseId(courseId)
@@ -283,7 +313,7 @@ public class ExcelReader {
                 }
 
                 gout(aClass);
-
+                classes.add(aClass);
 
             } catch (Exception e) {
 
@@ -293,6 +323,7 @@ public class ExcelReader {
 
 
         workbook.close();
+        return classes;
     }
 
 
