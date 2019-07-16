@@ -67,14 +67,14 @@ public class ExcelReader {
 
 
                 if (hash.containsKey(sepCourse)) {
-                    ArrayList<String> strings = hash.get(sepCourse);
-                    strings.add(sepTadrisyar);
-                    hash.put(sepCourse, strings);
+                    ArrayList<String> stringArrayList = hash.get(sepCourse);
+                    stringArrayList.add(sepTadrisyar);
+                    hash.put(sepCourse, stringArrayList);
 
                 } else {
-                    ArrayList<String> strings = new ArrayList<String>();
-                    strings.add(sepTadrisyar);
-                    hash.put(sepCourse, strings);
+                    ArrayList<String> stringArrayList = new ArrayList<String>();
+                    stringArrayList.add(sepTadrisyar);
+                    hash.put(sepCourse, stringArrayList);
                 }
 
 
