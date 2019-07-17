@@ -16,7 +16,7 @@ public class School {
     private boolean fromFirstSchool;
     private ArrayList<NeededClass> neededClasses;
 
-    private ArrayList<CapacityOfSchool> capacityOfSchools = new ArrayList<>(0);
+    private CapacityOfSchool capacityOfSchool;
     private ArrayList<Class> takableClasses;
 
 

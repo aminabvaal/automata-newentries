@@ -32,12 +32,27 @@ public class ExcelReader {
 
         ArrayList<Class> classes = freshEnrollCourses();
         ArrayList<School> schools = prepareSchools();
-        School school1 = schools.get(0);
+
+        caps.forEach(capacityOfSchool -> {
+
+            String schoolName = capacityOfSchool.getSchoolName();
+
+            schools.stream().filter(school -> school.getName().replaceAll(" ", "")
+                    .equals(schoolName.replaceAll(" ", "")))
+                    .forEach(school -> {
+                        school.setCapacityOfSchool(capacityOfSchool);
+                    });
+
+
+        });
+
+
         ArrayList<Integer> prios = new ArrayList<>();
         for (int i = 0; i < schools.size(); i++) {
             if (schools.get(i).isFromFirstSchool())
                 prios.add(i);
         }
+
 
         for (Integer prio : prios) {
             School school = schools.get(prio);
@@ -74,6 +89,11 @@ public class ExcelReader {
             for (NeededClass neededClass : neededClasses) {
                 ReturnOfGEtEaarlyTimeCourses earlyTimeOfCourses = getEarlyTimeOfCourses(takableClasses, neededClass);
 
+
+
+
+
+
             }
 
 
@@ -84,19 +104,6 @@ public class ExcelReader {
 
 
 //        ArrayList<CapacityOfSchool> caps = capsOfSchools();
-
-        caps.forEach(capacityOfSchool -> {
-
-            String schoolName = capacityOfSchool.getSchoolName();
-
-            schools.stream().filter(school -> school.getName().replaceAll(" ", "")
-                    .equals(schoolName.replaceAll(" ", "")))
-                    .forEach(school -> {
-                        school.getCapacityOfSchools().add(capacityOfSchool);
-                    });
-
-
-        });
 
 
         gout(schools);
