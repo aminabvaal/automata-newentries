@@ -109,6 +109,8 @@ public class ExcelReader {
                         int capacity = newTakableClass.getCapacity();
                         capOfTakables.add(capacity);
                     }
+
+
                     gout(capOfTakables);
 
 
