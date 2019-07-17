@@ -78,12 +78,10 @@ public class ExcelReader {
             }
             //یک درس از معارف
 
-            String s = "1051342\n" +
-                    "1051012\n" +
-                    "1051532\n" +
-                    "1051522\n";
+            for (NeededClass neededClass : neededClasses) {
+                if (neededClass.getCourseName().contains(""))
 
-
+            }
 
 
 
