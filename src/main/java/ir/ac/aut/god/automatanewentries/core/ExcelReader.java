@@ -76,6 +76,17 @@ public class ExcelReader {
                     }
                 }
             }
+            //یک درس از معارف
+
+            String s = "1051342\n" +
+                    "1051012\n" +
+                    "1051532\n" +
+                    "1051522\n";
+
+
+
+
+
             school.setTakableClasses(takableClasses);
         }
         gout(schools);
@@ -96,7 +107,7 @@ public class ExcelReader {
                 int pardiscap = school.getCapacityOfSchool().getPardiscap();
 
 
-                if (sizeOfTackables==0)
+                if (sizeOfTackables == 0)
                     System.out.println();
                 int awdiDividedCap = awdicapSchool / sizeOfTackables;
                 int pardisDividedCap = pardiscap / sizeOfTackables;
@@ -111,7 +122,7 @@ public class ExcelReader {
                     ArrayList<Integer> capOfTakables = new ArrayList<>();
 
 
-                    double taper=3;
+                    double taper = 3;
                     while (true) {
                         int sum = 0;
                         int sumOfThis = 0;
@@ -130,7 +141,7 @@ public class ExcelReader {
                         if (sumOfThis >= neededCap) {
                             break;
                         } else {
-                            taper/=1.2;
+                            taper /= 1.2;
                         }
                         System.out.println(sumOfThis);
 
