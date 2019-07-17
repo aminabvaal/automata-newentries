@@ -143,7 +143,6 @@ public class ExcelReader {
                 indexOfthem.add(i3);
                 sortedwhitchtiomes.add(timeofcourse);
                 wich.add(timeofcourse);
-                bestOftakableClasses.add(takableClass);
             }
 
         }
@@ -151,15 +150,22 @@ public class ExcelReader {
 
         Collections.sort(sortedwhitchtiomes);
 
-        int o=0;
-        while (wich.size()>0){
-            Integer timeofcourse = wich.get(o);
-            for (int i = 0; i < wich.size(); i++) {
-
+        int o = 0;
+        while (o < sortedwhitchtiomes.size() ) {
+            Integer timeofcourse = sortedwhitchtiomes.get(o);
+            int i = 0;
+            while (i < wich.size()) {
+                Integer w = wich.get(i);
+                if (w.equals(timeofcourse)) {
+                    Integer integer = indexOfthem.get(i);
+                    bestOftakableClasses.add(takableClasses.get(integer));
+                    wich.remove(i);
+                    indexOfthem.remove(i);
+                    break;
+                }
+                i++;
             }
-
-
-
+            o++;
         }
 
         gout(sortedwhitchtiomes);
