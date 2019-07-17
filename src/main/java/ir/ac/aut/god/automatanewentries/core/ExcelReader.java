@@ -106,14 +106,21 @@ public class ExcelReader {
 
 
                     ArrayList<Integer> capOfTakables = new ArrayList<>();
-                    int sum=0;
+                    int sum = 0;
+                    int sumOfThis= 0;
 
                     for (Class newTakableClass : newTakableClasses) {
                         int capacity = newTakableClass.getCapacity();
+                        int dividedCap = capacity / 3;
+
+                        sumOfThis += dividedCap;
+                        if (sumOfThis>=neededCap){
+                            break;
+                        }
                         capOfTakables.add(capacity);
                         sum += capacity;
                     }
-
+                    System.out.println(sumOfThis);
 
                     gout(capOfTakables);
 
