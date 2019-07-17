@@ -95,6 +95,9 @@ public class ExcelReader {
                 int awdicapSchool = school.getCapacityOfSchool().getAwdicap();
                 int pardiscap = school.getCapacityOfSchool().getPardiscap();
 
+
+                if (sizeOfTackables==0)
+                    System.out.println();
                 int awdiDividedCap = awdicapSchool / sizeOfTackables;
                 int pardisDividedCap = pardiscap / sizeOfTackables;
 
@@ -106,21 +109,33 @@ public class ExcelReader {
 
 
                     ArrayList<Integer> capOfTakables = new ArrayList<>();
-                    int sum = 0;
-                    int sumOfThis = 0;
 
-                    for (Class newTakableClass : newTakableClasses) {
-                        int capacity = newTakableClass.getCapacity();
-                        int dividedCap = capacity / 3;
 
-                        sumOfThis += dividedCap;
+                    double taper=3;
+                    while (true) {
+                        int sum = 0;
+                        int sumOfThis = 0;
+                        for (Class newTakableClass : newTakableClasses) {
+                            int capacity = newTakableClass.getCapacity();
+                            int dividedCap = (int) (capacity / taper);
+
+                            sumOfThis += dividedCap;
+                            if (sumOfThis >= neededCap) {
+                                break;
+                            }
+                            capOfTakables.add(capacity);
+                            sum += capacity;
+                        }
+
                         if (sumOfThis >= neededCap) {
                             break;
+                        } else {
+                            taper/=1.2;
                         }
-                        capOfTakables.add(capacity);
-                        sum += capacity;
+                        System.out.println(sumOfThis);
+
                     }
-                    System.out.println(sumOfThis);
+
 
                     gout(capOfTakables);
 
