@@ -98,6 +98,20 @@ public class ExcelReader {
                 int awdiDividedCap = awdicapSchool / sizeOfTackables;
                 int pardisDividedCap = pardiscap / sizeOfTackables;
 
+                PazireshType pazireshType = neededClass.getPazireshType();
+
+                if (pazireshType == PazireshType.Both) {
+                    int neededCap = awdicapSchool + pardiscap;
+                    int neededCapPerPossibles = neededCap / sizeOfTackables;
+
+                    for (Class newTakableClass : newTakableClasses) {
+                        int capacity = newTakableClass.getCapacity();
+                        
+                    }
+
+
+                }
+
 
             }
 
@@ -147,9 +161,11 @@ public class ExcelReader {
                 String time = times.get(0);
                 String[] split = time.split("_");
                 String t = split[0].split("t")[1];
+
                 int i = Integer.parseInt(t);
                 int i1 = Integer.parseInt(split[1]);
-                int i2 = Integer.parseInt(split[2]);
+                int i2 = Integer.parseInt(split[2]);//not need now
+
                 int timeofcourse = i * 2000 + i1;
                 indexOfthem.add(i3);
                 sortedwhitchtiomes.add(timeofcourse);
