@@ -90,10 +90,6 @@ public class ExcelReader {
                 ReturnOfGEtEaarlyTimeCourses earlyTimeOfCourses = getEarlyTimeOfCourses(takableClasses, neededClass);
 
 
-
-
-
-
             }
 
 
@@ -129,7 +125,9 @@ public class ExcelReader {
 
     private static ReturnOfGEtEaarlyTimeCourses getEarlyTimeOfCourses(ArrayList<Class> takableClasses, NeededClass neededClass) {
         ArrayList<Integer> indexOfthem = new ArrayList<>();
+        ArrayList<Class> bestOftakableClasses = new ArrayList<>();
         ArrayList<Integer> sortedwhitchtiomes = new ArrayList<>();
+        ArrayList<Integer> wich = new ArrayList<>();
 
         for (int i3 = 0; i3 < takableClasses.size(); i3++) {
             Class takableClass = takableClasses.get(i3);
@@ -144,12 +142,25 @@ public class ExcelReader {
                 int timeofcourse = i * 2000 + i1;
                 indexOfthem.add(i3);
                 sortedwhitchtiomes.add(timeofcourse);
+                wich.add(timeofcourse);
+                bestOftakableClasses.add(takableClass);
             }
 
         }
 
+
         Collections.sort(sortedwhitchtiomes);
 
+        int o=0;
+        while (wich.size()>0){
+            Integer timeofcourse = wich.get(o);
+            for (int i = 0; i < wich.size(); i++) {
+
+            }
+
+
+
+        }
 
         gout(sortedwhitchtiomes);
         gout(indexOfthem);
