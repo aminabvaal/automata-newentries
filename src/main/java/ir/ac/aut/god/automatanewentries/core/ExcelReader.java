@@ -87,7 +87,16 @@ public class ExcelReader {
             ArrayList<NeededClass> neededClasses = school.getNeededClasses();
 
             for (NeededClass neededClass : neededClasses) {
-                ReturnOfGEtEaarlyTimeCourses earlyTimeOfCourses = getEarlyTimeOfCourses(takableClasses, neededClass);
+                ArrayList<Class> newTakableClasses = getEarlyTimeOfCourses(takableClasses, neededClass);
+//                school.setTakableClasses(newTakableClasses);
+
+                int sizeOfTackables = newTakableClasses.size();
+
+                int awdicapSchool = school.getCapacityOfSchool().getAwdicap();
+                int pardiscap = school.getCapacityOfSchool().getPardiscap();
+
+                int awdiDividedCap = awdicapSchool / sizeOfTackables;
+                int pardisDividedCap = pardiscap / sizeOfTackables;
 
 
             }
@@ -123,7 +132,7 @@ public class ExcelReader {
 
     }
 
-    private static ReturnOfGEtEaarlyTimeCourses getEarlyTimeOfCourses(ArrayList<Class> takableClasses, NeededClass neededClass) {
+    private static ArrayList<Class> getEarlyTimeOfCourses(ArrayList<Class> takableClasses, NeededClass neededClass) {
         ArrayList<Integer> indexOfthem = new ArrayList<>();
         ArrayList<Class> bestOftakableClasses = new ArrayList<>();
         ArrayList<Integer> sortedwhitchtiomes = new ArrayList<>();
@@ -131,7 +140,9 @@ public class ExcelReader {
 
         for (int i3 = 0; i3 < takableClasses.size(); i3++) {
             Class takableClass = takableClasses.get(i3);
-            if (takableClass.getCourseId().equals(neededClass.getCourseId())) {
+            if (takableClass.getCourseId().equals(neededClass.getCourseId())
+                    && takableClass.getPazireshType() == neededClass.getPazireshType()
+            ) {
                 ArrayList<String> times = takableClass.getTimes();
                 String time = times.get(0);
                 String[] split = time.split("_");
@@ -151,7 +162,7 @@ public class ExcelReader {
         Collections.sort(sortedwhitchtiomes);
 
         int o = 0;
-        while (o < sortedwhitchtiomes.size() ) {
+        while (o < sortedwhitchtiomes.size()) {
             Integer timeofcourse = sortedwhitchtiomes.get(o);
             int i = 0;
             while (i < wich.size()) {
@@ -170,7 +181,7 @@ public class ExcelReader {
 
         gout(sortedwhitchtiomes);
         gout(indexOfthem);
-        return new ReturnOfGEtEaarlyTimeCourses().setIndexOfthem(indexOfthem).setSortedwhitchtiomes(sortedwhitchtiomes);
+        return bestOftakableClasses;
 
     }
 
@@ -337,15 +348,20 @@ public class ExcelReader {
                 String pazireshCode = dataFormatter.formatCellValue(row.getCell(5));
                 String sexualCode = dataFormatter.formatCellValue(row.getCell(7));
 
+                System.out.println(courseId);
 
                 String id = courseId + "__" + groupId;
 
 
-                String firstTime = "t" + dataFormatter.formatCellValue(row.getCell(9))
-                        + "_" + dataFormatter.formatCellValue(row.getCell(10))
-                        + "_" + dataFormatter.formatCellValue(row.getCell(11));
+                if (!dataFormatter.formatCellValue(row.getCell(9)).equals("-1")) {
 
-                times.add(firstTime);
+                    String firstTime = "t" + dataFormatter.formatCellValue(row.getCell(9))
+                            + "_" + dataFormatter.formatCellValue(row.getCell(10))
+                            + "_" + dataFormatter.formatCellValue(row.getCell(11));
+
+                    times.add(firstTime);
+                }
+
                 if (!dataFormatter.formatCellValue(row.getCell(12)).equals("-1")) {
                     String second = "t" + dataFormatter.formatCellValue(row.getCell(12))
                             + "_" + dataFormatter.formatCellValue(row.getCell(13))
@@ -362,22 +378,37 @@ public class ExcelReader {
 
                 String dateOfExam = dataFormatter.formatCellValue(row.getCell(18));
 
-                if (dateOfExam.isEmpty())
+                if (dateOfExam.isEmpty()
+                        && (courseName.contains("تدريس\u200Cيار")
+                        || courseName.contains("تدريس يار"))
+                ) {
                     continue;
+                }
+
+                Class aClass = new Class();
+
+
+                String year = "";
+                String month = "";
+                String day = "";
+
 
                 String[] tarikh = dateOfExam.split("/");
-                String year = tarikh[0];
-                String month = tarikh[1];
-                String day = tarikh[2];
+                ExamTime examTime = null;
 
-                String timeofStartExam = dataFormatter.formatCellValue(row.getCell(19));
-                String timeofStopExam = dataFormatter.formatCellValue(row.getCell(20));
+                if (tarikh.length == 3) {
+                    year = tarikh[0];
+                    month = tarikh[1];
+                    day = tarikh[2];
 
-                ExamTime examTime = new ExamTime().setDay(Integer.parseInt(day))
-                        .setFinishTime(Integer.parseInt(timeofStopExam))
-                        .setStartTime(Integer.parseInt(timeofStartExam))
-                        .setMonth(Integer.parseInt(month))
-                        .setYear(Integer.parseInt(year));
+                    String timeofStartExam = dataFormatter.formatCellValue(row.getCell(19));
+                    String timeofStopExam = dataFormatter.formatCellValue(row.getCell(20));
+                    examTime = new ExamTime().setDay(Integer.parseInt(day))
+                            .setFinishTime(Integer.parseInt(timeofStopExam))
+                            .setStartTime(Integer.parseInt(timeofStartExam))
+                            .setMonth(Integer.parseInt(month))
+                            .setYear(Integer.parseInt(year));
+                }
 
 
                 String capacity = dataFormatter.formatCellValue(row.getCell(21));
@@ -386,8 +417,6 @@ public class ExcelReader {
                 System.out.println(new Gson().toJson(times));
                 System.out.println(new Gson().toJson(dateOfExam));
 
-
-                Class aClass = new Class();
 
                 aClass
                         .setCapacity(Integer.parseInt(capacity))
