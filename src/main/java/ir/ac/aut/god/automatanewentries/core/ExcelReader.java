@@ -104,15 +104,18 @@ public class ExcelReader {
                     int neededCap = awdicapSchool + pardiscap;
                     int neededCapPerPossibles = neededCap / sizeOfTackables;
 
+
                     ArrayList<Integer> capOfTakables = new ArrayList<>();
+                    int sum=0;
+
                     for (Class newTakableClass : newTakableClasses) {
                         int capacity = newTakableClass.getCapacity();
                         capOfTakables.add(capacity);
+                        sum += capacity;
                     }
 
 
                     gout(capOfTakables);
-
 
                 }
 
