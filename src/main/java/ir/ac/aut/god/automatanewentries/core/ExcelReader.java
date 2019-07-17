@@ -28,6 +28,8 @@ public class ExcelReader {
     public static void main(String[] args) throws IOException, InvalidFormatException {
 
 
+        ArrayList<CapacityOfSchool> caps = capsOfSchools();
+
         ArrayList<Class> classes = freshEnrollCourses();
         ArrayList<School> schools = prepareSchools();
         School school1 = schools.get(0);
@@ -70,7 +72,7 @@ public class ExcelReader {
             ArrayList<NeededClass> neededClasses = school.getNeededClasses();
 
             for (NeededClass neededClass : neededClasses) {
-                ArrayList<Class> earlyTimeOfCourses = getEarlyTimeOfCourses(takableClasses, neededClass);
+                ReturnOfGEtEaarlyTimeCourses earlyTimeOfCourses = getEarlyTimeOfCourses(takableClasses, neededClass);
 
             }
 
@@ -81,16 +83,16 @@ public class ExcelReader {
         exit();
 
 
-        ArrayList<CapSchool> caps = capsOfSchools();
+//        ArrayList<CapacityOfSchool> caps = capsOfSchools();
 
-        caps.forEach(capSchool -> {
+        caps.forEach(capacityOfSchool -> {
 
-            String schoolName = capSchool.getSchoolName();
+            String schoolName = capacityOfSchool.getSchoolName();
 
             schools.stream().filter(school -> school.getName().replaceAll(" ", "")
                     .equals(schoolName.replaceAll(" ", "")))
                     .forEach(school -> {
-                        school.getCapSchools().add(capSchool);
+                        school.getCapacityOfSchools().add(capacityOfSchool);
                     });
 
 
@@ -118,36 +120,41 @@ public class ExcelReader {
 
     }
 
-    private static ArrayList<Class> getEarlyTimeOfCourses(ArrayList<Class> takableClasses, NeededClass neededClass) {
-        ArrayList<Integer> whitchtiomes = new ArrayList<>();
+    private static ReturnOfGEtEaarlyTimeCourses getEarlyTimeOfCourses(ArrayList<Class> takableClasses, NeededClass neededClass) {
+        ArrayList<Integer> indexOfthem = new ArrayList<>();
         ArrayList<Integer> sortedwhitchtiomes = new ArrayList<>();
 
-        for (Class takableClass : takableClasses) {
-            ArrayList<String> times = takableClass.getTimes();
-            String time = times.get(0);
-            String[] split = time.split("_");
-            String t = split[0].split("t")[1];
-            int i = Integer.parseInt(t);
-            int i1 = Integer.parseInt(split[1]);
-            int i2 = Integer.parseInt(split[2]);
-            int timeofcourse = i * 2000 + i1;
-            whitchtiomes.add(timeofcourse);
-            sortedwhitchtiomes.add(timeofcourse);
+        for (int i3 = 0; i3 < takableClasses.size(); i3++) {
+            Class takableClass = takableClasses.get(i3);
+            if (takableClass.getCourseId().equals(neededClass.getCourseId())) {
+                ArrayList<String> times = takableClass.getTimes();
+                String time = times.get(0);
+                String[] split = time.split("_");
+                String t = split[0].split("t")[1];
+                int i = Integer.parseInt(t);
+                int i1 = Integer.parseInt(split[1]);
+                int i2 = Integer.parseInt(split[2]);
+                int timeofcourse = i * 2000 + i1;
+                indexOfthem.add(i3);
+                sortedwhitchtiomes.add(timeofcourse);
+            }
+
         }
 
         Collections.sort(sortedwhitchtiomes);
 
 
         gout(sortedwhitchtiomes);
-        gout(whitchtiomes);
-        return null;
+        gout(indexOfthem);
+        return new ReturnOfGEtEaarlyTimeCourses().setIndexOfthem(indexOfthem).setSortedwhitchtiomes(sortedwhitchtiomes);
 
     }
 
 
-    public static ArrayList<CapSchool> capsOfSchools() throws IOException, InvalidFormatException {
+    public static ArrayList<CapacityOfSchool> capsOfSchools() throws IOException, InvalidFormatException {
 
-        ArrayList<CapSchool> capSchools = new ArrayList<>();
+        ArrayList<CapacityOfSchool> capacityOfSchools = new ArrayList<>();
+        ArrayList<String> shoolnames = new ArrayList<>();
 
         String SAMPLE_XLSX_FILE_PATH = "conf/cap.xlsx";
         Workbook workbook = WorkbookFactory.create(new File(SAMPLE_XLSX_FILE_PATH));
@@ -163,22 +170,46 @@ public class ExcelReader {
             if (schoolName.isEmpty())
                 continue;
 
+            if (!shoolnames.contains(schoolName)) {
+                shoolnames.add(schoolName);
 
-            CapSchool capSchool = new CapSchool().setSchoolName(schoolName)
-                    .setChertCode(cosCode).setCap(Integer.parseInt(cap));
+                CapacityOfSchool capacityOfSchool = new CapacityOfSchool().setSchoolName(schoolName)
+                        .setChertCode(cosCode);
 
-            if (paziresh.equals("روزانه"))
-                capSchool.setPazireshType(PazireshType.Awdi);
-            else if (paziresh.equals("پردیس خودگردان"))
-                capSchool.setPazireshType(PazireshType.Pardis);
-            else throw new RuntimeException("what is type??????????????");
+                if (paziresh.equals("روزانه")) {
+                    capacityOfSchool.setAwdicap(Integer.parseInt(cap));
+                } else if (paziresh.equals("پردیس خودگردان")) {
+                    capacityOfSchool.setPardiscap(Integer.parseInt(cap));
+                } else throw new RuntimeException("what is type??????????????");
 
 
-            capSchools.add(capSchool);
+                capacityOfSchools.add(capacityOfSchool);
 
-            System.err.println(new Gson().toJson(capSchool));
+                System.err.println(new Gson().toJson(capacityOfSchool));
+
+            } else {
+                Optional<CapacityOfSchool> first = capacityOfSchools.stream()
+                        .filter(capacityOfSchool -> capacityOfSchool.getSchoolName().equals(schoolName))
+                        .findFirst();
+                CapacityOfSchool capacityOfSchool = first.get();
+
+
+                if (paziresh.equals("روزانه")) {
+                    capacityOfSchool.setAwdicap(Integer.parseInt(cap));
+                } else if (paziresh.equals("پردیس خودگردان")) {
+                    capacityOfSchool.setPardiscap(Integer.parseInt(cap));
+                } else throw new RuntimeException("what is type??????????????");
+
+                capacityOfSchool.setCap(capacityOfSchool.getAwdicap() + capacityOfSchool.getPardiscap());
+                System.err.println(new Gson().toJson(capacityOfSchool));
+
+            }
+
+
         }
-        return capSchools;
+
+
+        return capacityOfSchools;
 
     }
 

@@ -10,11 +10,12 @@ import java.util.ArrayList;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class CapSchool {
+public class CapacityOfSchool {
     private String chertCode;
     private String schoolName;
     private int cap;
+    private int pardiscap;
+    private int awdicap;
     private PazireshType pazireshType;
-
 
 }
