@@ -148,6 +148,9 @@ public class ExcelReader {
                                     .setId(assignClass.getCourseId() + "__" + assignClass.getGroup());
 
                             int capacity = newTakableClass.getCapacity() - minesGlobal;
+                            if (capacity<1)
+                                continue;
+
                             int dividedCap = (int) (capacity / taper);
 
                             assignClass.setAssignedCap(dividedCap);
@@ -173,6 +176,10 @@ public class ExcelReader {
                         System.out.println(sumOfThis);
 
                     }
+
+                    school.setAssignedClasses(assignClasses);
+
+
                     for (AssignClass assignClass : assignClasses) {
                         for (AssignClass globalassignClass : globalassignClasses) {
                             String id = globalassignClass.getId();
