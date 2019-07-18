@@ -99,6 +99,10 @@ public class ExcelReader {
 
         for (Integer prio : prios) {
             School school = schools.get(prio);
+
+            if (prio==0)
+                System.out.println();
+
             ArrayList<Class> takableClasses = school.getTakableClasses();
             ArrayList<NeededClass> neededClasses = school.getNeededClasses();
 
