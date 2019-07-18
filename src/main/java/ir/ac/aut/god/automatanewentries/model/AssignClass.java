@@ -15,6 +15,7 @@ import java.util.ArrayList;
 @Setter
 @Accessors(chain = true)
 public class AssignClass {
+    private String courseName;
     private String courseId;
     private String id;
     private String group;
