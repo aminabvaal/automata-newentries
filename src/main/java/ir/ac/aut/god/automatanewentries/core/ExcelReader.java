@@ -16,7 +16,8 @@ public class ExcelReader {
 
 
     public static void gout(Object object) {
-        System.out.println(new Gson().toJson(object));
+        String x = new Gson().toJson(object);
+        System.out.println(x);
 
     }
 
@@ -123,7 +124,7 @@ public class ExcelReader {
 
                 PazireshType pazireshType = neededClass.getPazireshType();
 
-                if (pazireshType == PazireshType.Both) {
+//                if (pazireshType == PazireshType.Both) {
                     int neededCap = awdicapSchool + pardiscap;
                     int neededCapPerPossibles = neededCap / sizeOfTackables;
 
@@ -207,7 +208,7 @@ public class ExcelReader {
                     }
                     //gout(capOfTakables);
 
-                }
+//                }
 
 
             }
