@@ -138,6 +138,7 @@ public class ExcelReader {
                                 String id = globalassignClass.getId();
                                 if (id.equals(newTakableClass.getId())) {
                                     minesGlobal = globalassignClass.getAssignedCap();
+                                    break;
                                 }
                             }
 
