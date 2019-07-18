@@ -1,6 +1,7 @@
 package ir.ac.aut.god.automatanewentries.core;
 
 import com.google.gson.Gson;
+import ir.ac.aut.god.automatanewentries.io.MyWriter;
 import ir.ac.aut.god.automatanewentries.model.*;
 import ir.ac.aut.god.automatanewentries.model.Class;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -17,6 +18,8 @@ public class ExcelReader {
 
     public static void gout(Object object) {
         String x = new Gson().toJson(object);
+        MyWriter.of("conf/f.json",false).appendNewLine(x);
+
         System.out.println(x);
 
     }
