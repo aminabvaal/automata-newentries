@@ -125,6 +125,10 @@ public class ExcelReader {
                         int sum = 0;
                         int sumOfThis = 0;
                         for (Class newTakableClass : newTakableClasses) {
+
+
+
+
                             int capacity = newTakableClass.getCapacity();
                             int dividedCap = (int) (capacity / taper);
 
