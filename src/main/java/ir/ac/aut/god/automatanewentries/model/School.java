@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ public class School {
     private String code;
     private boolean fromFirstSchool;
     private ArrayList<NeededClass> neededClasses;
-    private ArrayList<AssignClass>  assignedClasses;
+    private HashMap<NeededClass, ArrayList<AssignClass>> assignCLassesOfNeedClass = new HashMap<>();
     private ArrayList<NeededClass> optionalMarefs;
 
     private CapacityOfSchool capacityOfSchool;

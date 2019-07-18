@@ -89,7 +89,7 @@ public class ExcelReader {
 
             school.setTakableClasses(takableClasses);
         }
-        gout(schools);
+        //gout(schools);
 
 
         for (Integer prio : prios) {
@@ -121,6 +121,7 @@ public class ExcelReader {
 
                     ArrayList<Integer> capOfTakables = new ArrayList<>();
                     ArrayList<AssignClass> assignClasses = new ArrayList<>();
+                    ArrayList<AssignClass> assignClasses2 = new ArrayList<>();
 
 
                     double taper = 3;
@@ -129,6 +130,9 @@ public class ExcelReader {
                         int sumOfThis = 0;
                         capOfTakables = new ArrayList<>();
                         assignClasses = new ArrayList<>();
+
+                        if (newTakableClasses.size()==0)
+                            System.out.println();
 
                         for (Class newTakableClass : newTakableClasses) {
 
@@ -177,7 +181,7 @@ public class ExcelReader {
 
                     }
 
-                    school.setAssignedClasses(assignClasses);
+                    school.getAssignCLassesOfNeedClass().put(neededClass, assignClasses);
 
 
                     for (AssignClass assignClass : assignClasses) {
@@ -191,7 +195,7 @@ public class ExcelReader {
                         }
                         globalassignClasses.add(assignClass);
                     }
-                    gout(capOfTakables);
+                    //gout(capOfTakables);
 
                 }
 
@@ -202,13 +206,13 @@ public class ExcelReader {
         }
 
 
+        gout(schools);
         exit();
 
 
 //        ArrayList<CapacityOfSchool> caps = capsOfSchools();
 
 
-        gout(schools);
 
 //        prepareSchools();
 //        System.exit(0);
@@ -220,7 +224,7 @@ public class ExcelReader {
 //
 //        ArrayList<String> strings1 = extractConfilicts(strings);
 //
-//        gout(strings1);
+//        //gout(strings1);
 
 
         //    s();
@@ -278,8 +282,8 @@ public class ExcelReader {
             o++;
         }
 
-        gout(sortedwhitchtiomes);
-        gout(indexOfthem);
+        //gout(sortedwhitchtiomes);
+        //gout(indexOfthem);
         return bestOftakableClasses;
 
     }
@@ -548,7 +552,7 @@ public class ExcelReader {
                     aClass.setPazireshType(PazireshType.Awdi);
                 }
 
-                gout(aClass);
+                //gout(aClass);
                 classes.add(aClass);
 
             } catch (Exception e) {

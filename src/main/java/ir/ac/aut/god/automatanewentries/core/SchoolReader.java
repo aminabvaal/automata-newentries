@@ -182,10 +182,10 @@ public class SchoolReader {
             i++;
         }
 
-        gout(sameSchools);
+        //gout(sameSchools);
 
         String dp = sameSchools.getSameCodes().get(0).get(0);
-        schools.stream().filter(school -> school.getCode().equals(dp)).forEach(SchoolReader::gout);
+        schools.stream().filter(school -> school.getCode().equals(dp)).forEach(SchoolReader:://gout);
 
         workbook.close();
 
