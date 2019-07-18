@@ -127,7 +127,7 @@ public class SchoolReader {
                     neededClass.setPazireshType(PazireshType.Both);
 
 
-                if (!cs.contains("معارف")) {
+                if (!(cs.contains("معارف") || cs.contains("درس عمومی"))) {
                     neededClasses.add(neededClass);
                     System.out.println(cs);
                 } else {
