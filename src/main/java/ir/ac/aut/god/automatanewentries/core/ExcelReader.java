@@ -139,14 +139,19 @@ public class ExcelReader {
                             int capacity = newTakableClass.getCapacity();
                             int dividedCap = (int) (capacity / taper);
 
+                            assignClass.setAssignedCap(dividedCap);
                             sumOfThis += dividedCap;
-                            if (sumOfThis >= neededCap) {
-                                break;
-                            }
+
                             assignClasses.add(assignClass);
 
                             capOfTakables.add(capacity);
                             sum += capacity;
+
+                            if (sumOfThis >= neededCap) {
+                                dividedCap=dividedCap-(sumOfThis-neededCap);
+                                assignClass.setAssignedCap(dividedCap);
+                                break;
+                            }
                         }
 
                         if (sumOfThis >= neededCap) {
