@@ -87,15 +87,6 @@ public class ExcelReader {
             }
 
 
-            //یک درس از معارف
-
-            for (NeededClass neededClass : neededClasses) {
-                if (neededClass.getCourseName().contains("عمومی")) {
-
-                }
-            }
-
-
             school.setTakableClasses(takableClasses);
         }
         //gout(schools);
@@ -195,7 +186,14 @@ public class ExcelReader {
 
                     }
 
+
+
+
                     school.getAssignCLassesOfNeedClass().put(neededClass, assignClasses);
+
+
+
+
 
 
                     for (AssignClass assignClass : assignClasses) {
