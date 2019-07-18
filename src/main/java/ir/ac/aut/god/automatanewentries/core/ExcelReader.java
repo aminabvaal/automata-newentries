@@ -82,7 +82,6 @@ public class ExcelReader {
                 if (neededClass.getCourseName().contains("عمومی")) {
 
                 }
-
             }
 
 

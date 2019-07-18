@@ -1,6 +1,7 @@
 package ir.ac.aut.god.automatanewentries.core;
 
 import com.google.gson.Gson;
+import ir.ac.aut.god.automatanewentries.io.MyReader;
 import ir.ac.aut.god.automatanewentries.model.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class SchoolReader {
 
@@ -77,7 +79,7 @@ public class SchoolReader {
 
 
                 NeededClass neededClass = new NeededClass();
-                neededClasses.add(neededClass);
+
 
 
                 priority = (int) row.getCell(4).getNumericCellValue();
@@ -114,6 +116,11 @@ public class SchoolReader {
                 neededClass.setCourseId(courseId)
                         .setCourseName(cs);
 
+
+
+
+
+
                 if (typeOfentrance.equals("عادی"))
                     neededClass.setPazireshType(PazireshType.Awdi);
                 else if (typeOfentrance.equals("پردیس"))
@@ -123,6 +130,25 @@ public class SchoolReader {
 
 
                 System.out.println(new Gson().toJson(neededClass));
+
+
+                if (!cs.contains("معارف")) {
+                    neededClasses.add(neededClass);
+                }else {
+                    Scanner scanner = MyReader.of("/conf/MaAref").getScanner();
+                    while (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
+                        String[] split = line.split(",");
+                        String csid = split[0];
+                        String s = split[1];
+                        String[] split1 = s.split("-");
+
+
+
+
+                    }
+                }
+
 
 //                System.exit(0);
 
