@@ -80,7 +80,7 @@ public class ExcelReader {
 
             for (NeededClass neededClass : neededClasses) {
                 if (neededClass.getCourseName().contains("عمومی")) {
-                    
+
                 }
 
             }

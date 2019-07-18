@@ -1,4 +1,4 @@
-//package ir.ac.aut.god.automatanewentries.model;
+package ir.ac.aut.god.automatanewentries.model;
 //
 //public enum  Maref {
 //
@@ -11,3 +11,7 @@
 //    Maref(String courseId,String Name,int... groups) {
 //    }
 //}
+
+public class Maref{
+
+}
