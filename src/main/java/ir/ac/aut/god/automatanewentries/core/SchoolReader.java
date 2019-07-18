@@ -149,7 +149,7 @@ public class SchoolReader {
                                 .setPriotryOfAwdiType(neededClass.getPriotryOfAwdiType())
                                 .setPriotryOfPardisType(neededClass.getPriotryOfPardisType())
                                 .setPossibleGroups(integers);
-                        
+
                         neededClasses.add(neededClass1);
                     }
                 }
