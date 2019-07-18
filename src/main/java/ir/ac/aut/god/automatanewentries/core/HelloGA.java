@@ -20,6 +20,7 @@ public class HelloGA {
         return -s;
     }
 
+
     public static void main(String[] args) {
         // 1.) Define the genotype (factory) suitable
         //     for the problem.
@@ -39,7 +40,7 @@ public class HelloGA {
         Engine<DoubleGene, Double> engine = Engine
                 .builder(HelloGA::eval, of)
                 .build();
-        
+
         // 4.) Start the execution (evolution) and
         //     collect the result.
         Genotype<DoubleGene> result = engine.stream()
