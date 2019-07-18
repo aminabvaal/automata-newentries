@@ -100,7 +100,7 @@ public class ExcelReader {
         for (Integer prio : prios) {
             School school = schools.get(prio);
 
-            if (prio==0)
+            if (prio == 0)
                 System.out.println();
 
             ArrayList<Class> takableClasses = school.getTakableClasses();
@@ -140,7 +140,7 @@ public class ExcelReader {
                         capOfTakables = new ArrayList<>();
                         assignClasses = new ArrayList<>();
 
-                        if (newTakableClasses.size()==0)
+                        if (newTakableClasses.size() == 0)
                             System.out.println();
 
                         for (Class newTakableClass : newTakableClasses) {
@@ -162,7 +162,7 @@ public class ExcelReader {
                                     .setId(assignClass.getCourseId() + "__" + assignClass.getGroup());
 
                             int capacity = newTakableClass.getCapacity() - minesGlobal;
-                            if (capacity<1)
+                            if (capacity < 1)
                                 continue;
 
                             int dividedCap = (int) (capacity / taper);
@@ -187,7 +187,7 @@ public class ExcelReader {
                         } else {
                             taper /= 1.2;
                         }
-                        System.out.println(sumOfThis);
+//                        System.out.println(sumOfThis);
 
                     }
 
@@ -223,7 +223,6 @@ public class ExcelReader {
 //        ArrayList<CapacityOfSchool> caps = capsOfSchools();
 
 
-
 //        prepareSchools();
 //        System.exit(0);
 //
@@ -252,7 +251,9 @@ public class ExcelReader {
         for (int i3 = 0; i3 < takableClasses.size(); i3++) {
             Class takableClass = takableClasses.get(i3);
             if (takableClass.getCourseId().equals(neededClass.getCourseId())
-                    && takableClass.getPazireshType() == neededClass.getPazireshType()
+                    && (takableClass.getPazireshType() == neededClass.getPazireshType()
+                    || takableClass.getPazireshType() == PazireshType.Both
+            )
             ) {
                 ArrayList<String> times = takableClass.getTimes();
                 String time = times.get(0);
