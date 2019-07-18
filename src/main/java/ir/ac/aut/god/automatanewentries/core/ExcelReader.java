@@ -127,7 +127,8 @@ public class ExcelReader {
                     while (true) {
                         int sum = 0;
                         int sumOfThis = 0;
-                      assignClasses = new ArrayList<>();
+                        capOfTakables = new ArrayList<>();
+                        assignClasses = new ArrayList<>();
 
                         for (Class newTakableClass : newTakableClasses) {
 
@@ -162,8 +163,9 @@ public class ExcelReader {
                         System.out.println(sumOfThis);
 
                     }
-
-
+                    for (AssignClass assignClass : assignClasses) {
+                        globalassignClasses.add(assignClass);
+                    }
                     gout(capOfTakables);
 
                 }
