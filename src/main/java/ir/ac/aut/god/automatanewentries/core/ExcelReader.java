@@ -53,6 +53,11 @@ public class ExcelReader {
                 prios.add(i);
         }
 
+        for (int i = 0; i < schools.size(); i++) {
+            if (!schools.get(i).isFromFirstSchool())
+                prios.add(i);
+        }
+
 
         for (Integer prio : prios) {
             School school = schools.get(prio);
