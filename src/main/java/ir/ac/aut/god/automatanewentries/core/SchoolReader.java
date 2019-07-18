@@ -44,6 +44,7 @@ public class SchoolReader {
 
         ArrayList<School> schools = new ArrayList<>();
         ArrayList<NeededClass> neededClasses = new ArrayList<>();
+        ArrayList<NeededClass> optinalMarefs= new ArrayList<>();
         ArrayList<String> codes = new ArrayList<>();
 
 
@@ -74,6 +75,7 @@ public class SchoolReader {
                     neededClasses = new ArrayList<>();
                     school.setName(headOfCollege);
                     school.setNeededClasses(neededClasses);
+                    school.setOptionalMarefs(optinalMarefs);
                     schools.add(school);
                 }
 
@@ -109,8 +111,6 @@ public class SchoolReader {
                 String cs = row.getCell(1).getStringCellValue();
 
 
-                System.err.println(priorityKHodgardan);
-
 
                 neededClass.setCourseId(courseId)
                         .setCourseName(cs);
@@ -124,11 +124,9 @@ public class SchoolReader {
                     neededClass.setPazireshType(PazireshType.Both);
 
 
-                System.out.println(new Gson().toJson(neededClass));
-
-
                 if (!cs.contains("معارف")) {
                     neededClasses.add(neededClass);
+                    System.out.println(cs);
                 } else {
                     Scanner scanner = MyReader.of("conf/MaAref").getScanner();
                     while (scanner.hasNextLine()) {
@@ -150,7 +148,7 @@ public class SchoolReader {
                                 .setPriotryOfPardisType(neededClass.getPriotryOfPardisType())
                                 .setPossibleGroups(integers);
 
-                        neededClasses.add(neededClass1);
+                        optinalMarefs.add(neededClass1);
                     }
                 }
 
