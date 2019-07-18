@@ -132,12 +132,21 @@ public class ExcelReader {
 
                         for (Class newTakableClass : newTakableClasses) {
 
+                            int minesGlobal = 0;
+
+                            for (AssignClass globalassignClass : globalassignClasses) {
+                                String id = globalassignClass.getId();
+                                if (id.equals(newTakableClass.getId())) {
+                                    minesGlobal = globalassignClass.getAssignedCap();
+                                }
+                            }
+
                             AssignClass assignClass = new AssignClass();
                             assignClass.setCourseId(newTakableClass.getCourseId())
                                     .setGroup(newTakableClass.getGroup())
-                                    .setId(assignClass.getCourseId() + "_" + assignClass.getGroup());
+                                    .setId(assignClass.getCourseId() + "__" + assignClass.getGroup());
 
-                            int capacity = newTakableClass.getCapacity();
+                            int capacity = newTakableClass.getCapacity() - minesGlobal;
                             int dividedCap = (int) (capacity / taper);
 
                             assignClass.setAssignedCap(dividedCap);
@@ -149,7 +158,7 @@ public class ExcelReader {
                             sum += capacity;
 
                             if (sumOfThis >= neededCap) {
-                                dividedCap=dividedCap-(sumOfThis-neededCap);
+                                dividedCap = dividedCap - (sumOfThis - neededCap);
                                 assignClass.setAssignedCap(dividedCap);
                                 break;
                             }
@@ -164,6 +173,14 @@ public class ExcelReader {
 
                     }
                     for (AssignClass assignClass : assignClasses) {
+                        for (AssignClass globalassignClass : globalassignClasses) {
+                            String id = globalassignClass.getId();
+                            if (id.equals(assignClass.getId())) {
+                                int newcap = assignClass.getAssignedCap() + globalassignClass.getAssignedCap();
+                                assignClass.setAssignedCap(newcap);
+                                break;
+                            }
+                        }
                         globalassignClasses.add(assignClass);
                     }
                     gout(capOfTakables);
