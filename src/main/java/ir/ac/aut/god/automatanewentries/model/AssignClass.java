@@ -14,21 +14,10 @@ import java.util.ArrayList;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class Class {
-    private String name;
+public class AssignClass {
     private String courseId;
     private String id;
     private String group;
-    private EntranceType entranceType;
-    private PazireshType pazireshType;
-    private SEX sex;
-    private ArrayList<TimeOf> InvolovingTimes;
-    private ArrayList<String> times;
-    private TimeOf finalExamTime;
-    private ExamTime examTime;
-    private int capacity;
-    private int blankCapacity;
-    private int maxCapacity;
-    private int minCapacity;
+    private int assignedCap;
 
 }

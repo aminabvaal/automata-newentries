@@ -15,6 +15,7 @@ public class School {
     private String code;
     private boolean fromFirstSchool;
     private ArrayList<NeededClass> neededClasses;
+    private ArrayList<AssignClass>  assignedClasses;
     private ArrayList<NeededClass> optionalMarefs;
 
     private CapacityOfSchool capacityOfSchool;

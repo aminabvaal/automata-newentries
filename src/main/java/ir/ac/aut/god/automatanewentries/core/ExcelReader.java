@@ -26,7 +26,7 @@ public class ExcelReader {
     }
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
-
+        ArrayList<AssignClass> globalassignClasses = new ArrayList<>();
 
         ArrayList<CapacityOfSchool> caps = capsOfSchools();
 
@@ -76,6 +76,8 @@ public class ExcelReader {
                     }
                 }
             }
+
+
             //یک درس از معارف
 
             for (NeededClass neededClass : neededClasses) {
@@ -118,16 +120,21 @@ public class ExcelReader {
 
 
                     ArrayList<Integer> capOfTakables = new ArrayList<>();
+                    ArrayList<AssignClass> assignClasses = new ArrayList<>();
 
 
                     double taper = 3;
                     while (true) {
                         int sum = 0;
                         int sumOfThis = 0;
+                      assignClasses = new ArrayList<>();
+
                         for (Class newTakableClass : newTakableClasses) {
 
-
-
+                            AssignClass assignClass = new AssignClass();
+                            assignClass.setCourseId(newTakableClass.getCourseId())
+                                    .setGroup(newTakableClass.getGroup())
+                                    .setId(assignClass.getCourseId() + "_" + assignClass.getGroup());
 
                             int capacity = newTakableClass.getCapacity();
                             int dividedCap = (int) (capacity / taper);
@@ -136,6 +143,8 @@ public class ExcelReader {
                             if (sumOfThis >= neededCap) {
                                 break;
                             }
+                            assignClasses.add(assignClass);
+
                             capOfTakables.add(capacity);
                             sum += capacity;
                         }
@@ -475,12 +484,11 @@ public class ExcelReader {
                 System.out.println(new Gson().toJson(times));
                 System.out.println(new Gson().toJson(dateOfExam));
 
-
                 aClass
                         .setCapacity(Integer.parseInt(capacity))
                         .setMaxCapacity(Integer.parseInt(capacity))
                         .setMinCapacity(Integer.parseInt(capacity))
-                        .setBlankCapacity((0))
+                        .setBlankCapacity(Integer.parseInt((capacity)))
                         .setName(courseName)
                         .setId(id)
                         .setCourseId(courseId)

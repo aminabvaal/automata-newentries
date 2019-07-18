@@ -13,6 +13,5 @@ import java.util.HashMap;
 @Getter
 @Setter
 public class SameSchools {
-private     ArrayList<ArrayList<String>> sameCodes = new ArrayList<>();
-
+    private ArrayList<ArrayList<String>> sameCodes = new ArrayList<>();
 }
