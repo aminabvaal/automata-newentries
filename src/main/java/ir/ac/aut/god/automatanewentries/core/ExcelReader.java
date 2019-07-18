@@ -151,7 +151,7 @@ public class ExcelReader {
                                     .setGroup(newTakableClass.getGroup())
                                     .setCourseName(newTakableClass.getName())
                                     .setId(assignClass.getCourseId() + "__" + assignClass.getGroup());
-                            
+
                             int capacity = newTakableClass.getCapacity() - minesGlobal;
                             if (capacity<1)
                                 continue;
