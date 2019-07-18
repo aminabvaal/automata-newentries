@@ -26,7 +26,6 @@ public class HelloGA {
 //        Factory<Genotype<BitGene>> gtf =
 //                Genotype.of(BitChromosome.of(5, 0.5));
 
-
         Genotype<DoubleGene> of = Genotype.of(DoubleChromosome.of(DoubleGene.of(0, 5), DoubleGene.of(0, 5)));
 
 
@@ -40,7 +39,7 @@ public class HelloGA {
         Engine<DoubleGene, Double> engine = Engine
                 .builder(HelloGA::eval, of)
                 .build();
-
+        
         // 4.) Start the execution (evolution) and
         //     collect the result.
         Genotype<DoubleGene> result = engine.stream()
