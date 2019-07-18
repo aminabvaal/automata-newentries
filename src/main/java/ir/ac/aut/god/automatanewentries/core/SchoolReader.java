@@ -43,9 +43,9 @@ public class SchoolReader {
         DataFormatter dataFormatter = new DataFormatter();
 
         ArrayList<School> schools = new ArrayList<>();
-        ArrayList<NeededClass> neededClasses = new ArrayList<>();
-        ArrayList<NeededClass> optinalMarefs= new ArrayList<>();
         ArrayList<String> codes = new ArrayList<>();
+        ArrayList<NeededClass> optinalMarefs = null;
+        ArrayList<NeededClass> neededClasses = null;
 
 
         SameSchools sameSchools = new SameSchools();
@@ -58,6 +58,9 @@ public class SchoolReader {
                 String possibleCollege = row.getCell(0).getStringCellValue();
 
                 if (!possibleCollege.isEmpty()) {
+
+                    optinalMarefs= new ArrayList<>();
+                    neededClasses = new ArrayList<>();
 
                     headOfCollege = possibleCollege;
                     school = new School();
@@ -147,9 +150,10 @@ public class SchoolReader {
                                 .setPriotryOfAwdiType(neededClass.getPriotryOfAwdiType())
                                 .setPriotryOfPardisType(neededClass.getPriotryOfPardisType())
                                 .setPossibleGroups(integers);
-
                         optinalMarefs.add(neededClass1);
+
                     }
+
                 }
 
 
