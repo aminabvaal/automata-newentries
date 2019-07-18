@@ -81,7 +81,6 @@ public class SchoolReader {
                 NeededClass neededClass = new NeededClass();
 
 
-
                 priority = (int) row.getCell(4).getNumericCellValue();
                 priorityKHodgardan = (int) row.getCell(5).getNumericCellValue();
 
@@ -117,10 +116,6 @@ public class SchoolReader {
                         .setCourseName(cs);
 
 
-
-
-
-
                 if (typeOfentrance.equals("عادی"))
                     neededClass.setPazireshType(PazireshType.Awdi);
                 else if (typeOfentrance.equals("پردیس"))
@@ -134,7 +129,7 @@ public class SchoolReader {
 
                 if (!cs.contains("معارف")) {
                     neededClasses.add(neededClass);
-                }else {
+                } else {
                     Scanner scanner = MyReader.of("/conf/MaAref").getScanner();
                     while (scanner.hasNextLine()) {
                         String line = scanner.nextLine();
@@ -142,8 +137,20 @@ public class SchoolReader {
                         String csid = split[0];
                         String s = split[1];
                         String[] split1 = s.split("-");
+                        ArrayList<Integer> integers = new ArrayList<>();
+                        for (String s1 : split1) {
+                            integers.add(Integer.parseInt(s1));
+                        }
 
 
+                        NeededClass neededClass1 = new NeededClass().setPazireshType(neededClass.getPazireshType())
+                                .setCourseId(csid)
+                                .setCourseName("")
+                                .setPriotryOfAwdiType(neededClass.getPriotryOfAwdiType())
+                                .setPriotryOfPardisType(neededClass.getPriotryOfPardisType())
+                                .setPossibleGroups(integers);
+
+                        neededClasses.add(neededClass1);
 
 
                     }
