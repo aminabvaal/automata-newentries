@@ -79,10 +79,11 @@ public class ExcelReader {
             //یک درس از معارف
 
             for (NeededClass neededClass : neededClasses) {
-                if (neededClass.getCourseName().contains(""))
+                if (neededClass.getCourseName().contains("عمومی")) {
+                    
+                }
 
             }
-
 
 
             school.setTakableClasses(takableClasses);
