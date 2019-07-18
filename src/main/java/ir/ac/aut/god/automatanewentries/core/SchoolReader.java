@@ -130,7 +130,7 @@ public class SchoolReader {
                 if (!cs.contains("معارف")) {
                     neededClasses.add(neededClass);
                 } else {
-                    Scanner scanner = MyReader.of("/conf/MaAref").getScanner();
+                    Scanner scanner = MyReader.of("conf/MaAref").getScanner();
                     while (scanner.hasNextLine()) {
                         String line = scanner.nextLine();
                         String[] split = line.split(",");
@@ -149,10 +149,8 @@ public class SchoolReader {
                                 .setPriotryOfAwdiType(neededClass.getPriotryOfAwdiType())
                                 .setPriotryOfPardisType(neededClass.getPriotryOfPardisType())
                                 .setPossibleGroups(integers);
-
+                        
                         neededClasses.add(neededClass1);
-
-
                     }
                 }
 
