@@ -18,7 +18,7 @@ public class ExcelReader {
 
     public static void gout(Object object) {
         String x = new Gson().toJson(object);
-        MyWriter.of("conf/f.json",false).appendNewLine(x);
+//        MyWriter.of("conf/f.json",false).appendNewLine(x);
 
         System.out.println(x);
 
@@ -68,7 +68,6 @@ public class ExcelReader {
 
             ArrayList<Class> takableClasses = new ArrayList<>();
 
-
             ArrayList<NeededClass> neededClasses = school.getNeededClasses();
             for (NeededClass neededClass : neededClasses) {
                 for (Class aClass : classes) {
@@ -89,8 +88,38 @@ public class ExcelReader {
 
             school.setTakableClasses(takableClasses);
         }
-        //gout(schools);
 
+        for (Integer prio : prios) {
+
+            School school = schools.get(prio);
+
+            ArrayList<Class> takableClasses = school.getTakableClasses();
+            ArrayList<NeededClass> neededClasses = school.getNeededClasses();
+
+            for (NeededClass neededClass : neededClasses) {
+                ArrayList<Class> newTakableClasses = getEarlyTimeOfCourses(takableClasses, neededClass);
+
+                int awdicapSchool = school.getCapacityOfSchool().getAwdicap();
+                int pardiscap = school.getCapacityOfSchool().getPardiscap();
+
+                int neededCap = awdicapSchool + pardiscap;
+
+
+
+
+                ArrayList<ArrayList<AssignClass>> schedulingGroups = school.getSchedulingGroups();
+
+
+            }
+
+
+        }
+
+
+        //todo this is elementary rules for scheduling for initial presentations
+        //todo this is elementary rules for scheduling for initial presentations
+        //todo this is elementary rules for scheduling for initial presentations
+        //todo this is elementary rules for scheduling for initial presentations
 
         for (Integer prio : prios) {
             School school = schools.get(prio);
@@ -119,95 +148,91 @@ public class ExcelReader {
                 PazireshType pazireshType = neededClass.getPazireshType();
 
 //                if (pazireshType == PazireshType.Both) {
-                    int neededCap = awdicapSchool + pardiscap;
-                    int neededCapPerPossibles = neededCap / sizeOfTackables;
+                int neededCap = awdicapSchool + pardiscap;
+                int neededCapPerPossibles = neededCap / sizeOfTackables;
 
 
-                    ArrayList<Integer> capOfTakables = new ArrayList<>();
-                    ArrayList<AssignClass> assignClasses = new ArrayList<>();
-                    ArrayList<AssignClass> assignClasses2 = new ArrayList<>();
+                ArrayList<Integer> capOfTakables = new ArrayList<>();
+                ArrayList<AssignClass> assignClasses = new ArrayList<>();
+                ArrayList<AssignClass> assignClasses2 = new ArrayList<>();
 
 
-                    double taper = 3;
-                    while (true) {
-                        int sum = 0;
-                        int sumOfThis = 0;
-                        capOfTakables = new ArrayList<>();
-                        assignClasses = new ArrayList<>();
+                double taper = 3;
+                while (true) {
+                    int sum = 0;
+                    int sumOfThis = 0;
+                    capOfTakables = new ArrayList<>();
+                    assignClasses = new ArrayList<>();
 
-                        if (newTakableClasses.size() == 0)
-                            System.out.println();
+                    if (newTakableClasses.size() == 0)
+                        System.out.println();
 
-                        for (Class newTakableClass : newTakableClasses) {
+                    for (Class newTakableClass : newTakableClasses) {
 
-                            int minesGlobal = 0;
+                        int minesGlobal = 0;
 
-                            for (AssignClass globalassignClass : globalassignClasses) {
-                                String id = globalassignClass.getId();
-                                if (id.equals(newTakableClass.getId())) {
-                                    minesGlobal = globalassignClass.getAssignedCap();
-                                    break;
-                                }
-                            }
-
-                            AssignClass assignClass = new AssignClass();
-                            assignClass.setCourseId(newTakableClass.getCourseId())
-                                    .setGroup(newTakableClass.getGroup())
-                                    .setCourseName(newTakableClass.getName())
-                                    .setId(assignClass.getCourseId() + "__" + assignClass.getGroup());
-
-                            int capacity = newTakableClass.getCapacity() - minesGlobal;
-                            if (capacity < 1)
-                                continue;
-
-                            int dividedCap = (int) (capacity / taper);
-
-                            assignClass.setAssignedCap(dividedCap);
-                            sumOfThis += dividedCap;
-
-                            assignClasses.add(assignClass);
-
-                            capOfTakables.add(capacity);
-                            sum += capacity;
-
-                            if (sumOfThis >= neededCap) {
-                                dividedCap = dividedCap - (sumOfThis - neededCap);
-                                assignClass.setAssignedCap(dividedCap);
-                                break;
-                            }
-                        }
-
-                        if (sumOfThis >= neededCap) {
-                            break;
-                        } else {
-                            taper /= 1.2;
-                        }
-//                        System.out.println(sumOfThis);
-
-                    }
-
-
-
-
-                    school.getAssignCLassesOfNeedClass().put(neededClass, assignClasses);
-
-
-
-
-
-
-                    for (AssignClass assignClass : assignClasses) {
                         for (AssignClass globalassignClass : globalassignClasses) {
                             String id = globalassignClass.getId();
-                            if (id.equals(assignClass.getId())) {
-                                int newcap = assignClass.getAssignedCap() + globalassignClass.getAssignedCap();
-                                assignClass.setAssignedCap(newcap);
+                            if (id.equals(newTakableClass.getId())) {
+                                minesGlobal = globalassignClass.getAssignedCap();
                                 break;
                             }
                         }
-                        globalassignClasses.add(assignClass);
+
+                        AssignClass assignClass = new AssignClass();
+                        assignClass.setCourseId(newTakableClass.getCourseId())
+                                .setGroup(newTakableClass.getGroup())
+                                .setCourseName(newTakableClass.getName())
+                                .setId(assignClass.getCourseId() + "__" + assignClass.getGroup())
+                                .setTimes(newTakableClass.getTimes())
+                        ;
+
+                        int capacity = newTakableClass.getCapacity() - minesGlobal;
+                        if (capacity < 1)
+                            continue;
+
+                        int dividedCap = (int) (capacity / taper);
+
+                        assignClass.setAssignedCap(dividedCap);
+                        sumOfThis += dividedCap;
+
+                        assignClasses.add(assignClass);
+
+                        capOfTakables.add(capacity);
+                        sum += capacity;
+
+                        if (sumOfThis >= neededCap) {
+                            dividedCap = dividedCap - (sumOfThis - neededCap);
+                            assignClass.setAssignedCap(dividedCap);
+                            break;
+                        }
                     }
-                    //gout(capOfTakables);
+
+                    if (sumOfThis >= neededCap) {
+                        break;
+                    } else {
+                        taper /= 1.2;
+                    }
+//                        System.out.println(sumOfThis);
+
+                }
+
+
+                school.getAssignCLassesOfNeedClass().put(neededClass, assignClasses);
+
+
+                for (AssignClass assignClass : assignClasses) {
+                    for (AssignClass globalassignClass : globalassignClasses) {
+                        String id = globalassignClass.getId();
+                        if (id.equals(assignClass.getId())) {
+                            int newcap = assignClass.getAssignedCap() + globalassignClass.getAssignedCap();
+                            assignClass.setAssignedCap(newcap);
+                            break;
+                        }
+                    }
+                    globalassignClasses.add(assignClass);
+                }
+                //gout(capOfTakables);
 
 //                }
 

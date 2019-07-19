@@ -15,12 +15,14 @@ public class School {
     private String name;
     private String code;
     private boolean fromFirstSchool;
+
     private ArrayList<NeededClass> neededClasses;
     private HashMap<NeededClass, ArrayList<AssignClass>> assignCLassesOfNeedClass = new HashMap<>();
     private ArrayList<NeededClass> optionalMarefs;
 
     private CapacityOfSchool capacityOfSchool;
     private ArrayList<Class> takableClasses;
+    private ArrayList<ArrayList<AssignClass>> schedulingGroups = new ArrayList<>();
 
 
 }

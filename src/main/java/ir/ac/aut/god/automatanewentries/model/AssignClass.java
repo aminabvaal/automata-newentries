@@ -20,5 +20,7 @@ public class AssignClass {
     private String id;
     private String group;
     private int assignedCap;
+    private ArrayList<String> times;
+
 
 }
