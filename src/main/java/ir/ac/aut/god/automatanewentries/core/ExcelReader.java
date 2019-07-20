@@ -6,6 +6,7 @@ import ir.ac.aut.god.automatanewentries.model.*;
 import ir.ac.aut.god.automatanewentries.model.Class;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import org.springframework.expression.spel.ast.Assign;
 
 import java.io.File;
 import java.io.IOException;
@@ -96,18 +97,121 @@ public class ExcelReader {
             ArrayList<Class> takableClasses = school.getTakableClasses();
             ArrayList<NeededClass> neededClasses = school.getNeededClasses();
 
+
+            NeededClass neededClass1 = neededClasses.get(0);
+
+            ArrayList<Class> newTakableClasses1 = getEarlyTimeOfCourses(takableClasses, neededClass1);
+
+            ArrayList<Class> takabls = getEarlyTimeOfCourses(newTakableClasses1, neededClass1);
+
+            int sizeOfTackables = newTakableClasses1.size();
+
+            int awdicapSchool = school.getCapacityOfSchool().getAwdicap();
+            int pardiscap = school.getCapacityOfSchool().getPardiscap();
+
+
+            if (sizeOfTackables == 0)
+                System.out.println();
+            int awdiDividedCap = awdicapSchool / sizeOfTackables;
+            int pardisDividedCap = pardiscap / sizeOfTackables;
+
+            PazireshType pazireshType = neededClass1.getPazireshType();
+
+//                if (pazireshType == PazireshType.Both) {
+            int neededCap = awdicapSchool + pardiscap;
+            int neededCapPerPossibles = neededCap / sizeOfTackables;
+
+
+            ArrayList<Integer> capOfTakables = new ArrayList<>();
+            ArrayList<AssignClass> assignClasses = new ArrayList<>();
+
+
+            double taper = 3;
+            while (true) {
+                int sum = 0;
+                int sumOfThis = 0;
+                capOfTakables = new ArrayList<>();
+                assignClasses = new ArrayList<>();
+
+                if (newTakableClasses1.size() == 0)
+                    System.out.println();
+
+                for (Class newTakableClass : newTakableClasses1) {
+
+                    AssignClass assignClass = new AssignClass();
+                    assignClass.setCourseId(newTakableClass.getCourseId())
+                            .setGroup(newTakableClass.getGroup())
+                            .setCourseName(newTakableClass.getName())
+                            .setId(assignClass.getCourseId() + "__" + assignClass.getGroup())
+                            .setTimes(newTakableClass.getTimes())
+                    ;
+
+                    int capacity = newTakableClass.getCapacity();
+                    if (capacity < 1)
+                        continue;
+
+                    int dividedCap = (int) (capacity / taper);
+
+
+                    assignClass.setAssignedCap(dividedCap);
+
+                    sumOfThis += dividedCap;
+
+                    assignClasses.add(assignClass);
+                    capOfTakables.add(capacity);
+                    sum += capacity;
+
+                    if (sumOfThis >= neededCap) {
+                        dividedCap = dividedCap - (sumOfThis - neededCap);
+                        assignClass.setAssignedCap(dividedCap);
+                        break;
+                    }
+                }
+
+                if (sumOfThis >= neededCap) {
+                    break;
+                } else {
+                    taper /= 1.2;
+                }
+//                        System.out.println(sumOfThis);
+
+            }
+
+            for (AssignClass assignClass : assignClasses) {
+                ArrayList<AssignClass> assignClasses1 = new ArrayList<>();
+                assignClasses1.add(assignClass);
+                school.getSchedulingGroups().add(assignClasses1);
+            }
+
+
             for (NeededClass neededClass : neededClasses) {
+
                 ArrayList<Class> newTakableClasses = getEarlyTimeOfCourses(takableClasses, neededClass);
 
-                int awdicapSchool = school.getCapacityOfSchool().getAwdicap();
-                int pardiscap = school.getCapacityOfSchool().getPardiscap();
+                awdicapSchool = school.getCapacityOfSchool().getAwdicap();
+                pardiscap = school.getCapacityOfSchool().getPardiscap();
 
-                int neededCap = awdicapSchool + pardiscap;
-
-
-
+                neededCap = awdicapSchool + pardiscap;
 
                 ArrayList<ArrayList<AssignClass>> schedulingGroups = school.getSchedulingGroups();
+
+
+                for (Class newTakableClass : newTakableClasses) {
+
+
+                    for (ArrayList<AssignClass> schedulingGroup : schedulingGroups) {
+                        ArrayList<ArrayList<String>> timesForInvestigation = new ArrayList<>();
+                        for (AssignClass assignClass : schedulingGroup) {
+                            isConfilictTtimes(assignClass.getTimes(), newTakableClass.getTimes());
+
+                            timesForInvestigation.add(assignClass.getTimes());
+                        }
+
+
+                    }
+
+
+                }
 
 
             }
@@ -253,19 +357,23 @@ public class ExcelReader {
 //        prepareSchools();
 //        System.exit(0);
 //
-//        ArrayList<String> strings = new ArrayList<>();
-//        strings.add("t4_945_1045");
-//        strings.add("t4_800_1000");
-//        strings.add("t4_1000_1200");
-//
-//        ArrayList<String> strings1 = extractConfilicts(strings);
-//
-//        //gout(strings1);
 
 
         //    s();
 //        cap();
         System.exit(0);
+
+    }
+
+    private static boolean isConfilictTtimes(ArrayList<String> timesOfAssigned, ArrayList<String> timesOfTakabel) {
+        ArrayList<String> timesAll = new ArrayList<>();
+        timesAll.addAll(timesOfAssigned);
+        timesAll.addAll(timesOfTakabel);
+
+        ArrayList<String> strings = extractConfilicts(timesAll);
+        System.out.println();
+        return false;
+
 
     }
 
@@ -400,7 +508,8 @@ public class ExcelReader {
             int startTime = (Integer.parseInt(numberofweek)) * 2000 + Integer.parseInt(st);
             int finishTime = (Integer.parseInt(numberofweek)) * 2000 + Integer.parseInt(ft);
 
-            String tis = time + ":";
+//            String tis = time + ":";
+            String tis = "";
 
             for (String tt : times) {
                 String[] tts = tt.split("_");
@@ -416,10 +525,15 @@ public class ExcelReader {
                 );
 
                 boolean b0 = (startTime == ttstartTime) && (ttfinishTime == finishTime);
-                if (b && !b0) {
+//                if (b && !b0) {
+                if (b || b0) {
                     tis += tt + ",";
                 }
+
             }
+            String s1 = tis.replaceFirst(time + ",", "");
+            tis = time + ":" + s1;
+
             response.add(tis);
         }
         return response;

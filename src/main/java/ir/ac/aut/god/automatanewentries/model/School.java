@@ -24,5 +24,4 @@ public class School {
     private ArrayList<Class> takableClasses;
     private ArrayList<ArrayList<AssignClass>> schedulingGroups = new ArrayList<>();
 
-
 }
