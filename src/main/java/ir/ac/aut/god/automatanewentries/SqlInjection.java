@@ -13,8 +13,8 @@ public class SqlInjection {
     public static void main(String[] args) {
 
         ArrayList<String> strings = new ArrayList<>();
-////        strings.add("t4_945_1045");
-//        strings.add("t4_800_1000");
+        strings.add("t4_945_1045");
+        strings.add("t4_800_1000");
         strings.add("t4_1000_1200");
         strings.add("t4_1000_1200");
         strings.add("t4_1000_1200");
