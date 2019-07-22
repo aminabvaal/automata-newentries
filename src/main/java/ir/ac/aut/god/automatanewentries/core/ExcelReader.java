@@ -1,12 +1,10 @@
 package ir.ac.aut.god.automatanewentries.core;
 
 import com.google.gson.Gson;
-import ir.ac.aut.god.automatanewentries.io.MyWriter;
 import ir.ac.aut.god.automatanewentries.model.*;
 import ir.ac.aut.god.automatanewentries.model.Class;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
-import org.springframework.expression.spel.ast.Assign;
 
 import java.io.File;
 import java.io.IOException;
@@ -195,23 +193,84 @@ public class ExcelReader {
 
                 ArrayList<ArrayList<AssignClass>> schedulingGroups = school.getSchedulingGroups();
 
+                ArrayList<Class> newAssignableClasses = new ArrayList<>();
 
+
+//                HashMap<Class, ArrayList<AssignClass>> schedulingGroupsForThisNeeded = new HashMap<>();
+
+                HashMap<Class, ArrayList<ArrayList<AssignClass>>> schedulingGroupsForThisNeeded = new HashMap<>();
+
+                int allCap = 0;
                 for (Class newTakableClass : newTakableClasses) {
+                    ArrayList<ArrayList<AssignClass>> objects = new ArrayList<>();
 
-
+                    allCap = 0;
                     for (ArrayList<AssignClass> schedulingGroup : schedulingGroups) {
-                        ArrayList<ArrayList<String>> timesForInvestigation = new ArrayList<>();
+                        int assignedCap = schedulingGroup.get(0).getAssignedCap();
+                        allCap += assignedCap;
+
+                        boolean assignable = true;
+
                         for (AssignClass assignClass : schedulingGroup) {
-                            isConfilictTtimes(assignClass.getTimes(), newTakableClass.getTimes());
 
-                            timesForInvestigation.add(assignClass.getTimes());
+                            if (isConfilictTtimes(assignClass.getTimes(), newTakableClass.getTimes())) {
+                                assignable = false;
+                                break;
+                            }
                         }
+                        if (assignable)
+                            objects.add(schedulingGroup);
+                        System.out.println(assignable);
 
+                    }
+//                    if (objects.size()>0)
+                        schedulingGroupsForThisNeeded.put(newTakableClass, objects);
+
+                }
+
+                //todo from here left
+
+                System.out.println(schedulingGroupsForThisNeeded.size());
+
+                Set<Class> assignableClasses = schedulingGroupsForThisNeeded.keySet();
+                int sumtakableCap = 0;
+                for (Class aClass : assignableClasses) {
+                    sumtakableCap += aClass.getCapacity();
+                }
+                if (sumtakableCap < school.getCapacityOfSchool().getCap()) {
+                    throw new RuntimeException("king in the north");
+                }
+
+                int i = sumtakableCap / assignableClasses.size();
+
+
+                for (Class assignableClass : assignableClasses) {
+
+                    ArrayList<ArrayList<AssignClass>> sgAssigneds = schedulingGroupsForThisNeeded.get(assignableClass);
+
+                    if (sgAssigneds.size() == 0) {
+                        gout(sgAssigneds);
+                        continue;
+                    }
+
+                    for (ArrayList<AssignClass> sgAssigned : sgAssigneds) {
+                        int assignedCap = sgAssigned.get(0).getAssignedCap();
+
+                        int assignableClassCapacity = assignableClass.getCapacity() - 0/*globalassigns.cap*/;
 
                     }
 
 
                 }
+
+
+//                schedulingGroupsForThisNeeded
+
+
+                for (ArrayList<AssignClass> schedulingGroup : schedulingGroups) {
+
+                }
+                System.out.println(allCap);
 
 
             }
@@ -366,11 +425,44 @@ public class ExcelReader {
     }
 
     private static boolean isConfilictTtimes(ArrayList<String> timesOfAssigned, ArrayList<String> timesOfTakabel) {
-        ArrayList<String> timesAll = new ArrayList<>();
-        timesAll.addAll(timesOfAssigned);
-        timesAll.addAll(timesOfTakabel);
 
-        ArrayList<String> strings = extractConfilicts(timesAll);
+        String tis = "";
+
+        for (String TIME : timesOfAssigned) {
+
+
+            String[] s = TIME.split("_");
+
+            String numberofweek = s[0].substring(1);
+            String st = s[1];
+            String ft = s[2];
+            int startTime = (Integer.parseInt(numberofweek)) * 2000 + Integer.parseInt(st);
+            int finishTime = (Integer.parseInt(numberofweek)) * 2000 + Integer.parseInt(ft);
+
+            for (String tt : timesOfTakabel) {
+                String[] tts = tt.split("_");
+                String ttnumberofweek = tts[0].substring(1);
+                String ttst = tts[1];
+                String ttft = tts[2];
+                int ttstartTime = (Integer.parseInt(ttnumberofweek)) * 2000 + Integer.parseInt(ttst);
+                int ttfinishTime = (Integer.parseInt(ttnumberofweek)) * 2000 + Integer.parseInt(ttft);
+
+                boolean b = !(
+                        ((ttstartTime < startTime) && (ttfinishTime <= startTime)) ||
+                                ((ttstartTime >= finishTime) && (ttfinishTime > finishTime))
+                );
+
+                boolean b0 = (startTime == ttstartTime) && (ttfinishTime == finishTime);
+                if (b || b0) {
+                    return true;
+                } else
+                    continue;
+
+            }
+
+        }
+
+
         System.out.println();
         return false;
 
