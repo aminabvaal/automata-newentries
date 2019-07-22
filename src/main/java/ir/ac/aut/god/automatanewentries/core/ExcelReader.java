@@ -191,7 +191,17 @@ public class ExcelReader {
 
                 neededCap = awdicapSchool + pardiscap;
 
+                ArrayList<ProgramGroup> programGroups = new ArrayList<>();
                 ArrayList<ArrayList<AssignClass>> schedulingGroups = school.getSchedulingGroups();
+                for (int i = 0; i < schedulingGroups.size(); i++) {
+                    ArrayList<AssignClass> schedulingGroup = schedulingGroups.get(i);
+                    ProgramGroup programGroup = new ProgramGroup().setId(i).setHadAssignClasses(schedulingGroup);
+                    programGroups.add(programGroup);
+
+                }
+
+
+
 
                 ArrayList<Class> newAssignableClasses = new ArrayList<>();
 
@@ -200,14 +210,13 @@ public class ExcelReader {
 
                 HashMap<Class, ArrayList<ArrayList<AssignClass>>> schedulingGroupsForThisNeeded = new HashMap<>();
 
-                int allCap = 0;
+                ArrayList<ArrayList<Class>> reverseschedulingGroupsForThisNeeded = new ArrayList<>();
+
                 for (Class newTakableClass : newTakableClasses) {
                     ArrayList<ArrayList<AssignClass>> objects = new ArrayList<>();
 
-                    allCap = 0;
                     for (ArrayList<AssignClass> schedulingGroup : schedulingGroups) {
-                        int assignedCap = schedulingGroup.get(0).getAssignedCap();
-                        allCap += assignedCap;
+
 
                         boolean assignable = true;
 
@@ -220,13 +229,40 @@ public class ExcelReader {
                         }
                         if (assignable)
                             objects.add(schedulingGroup);
-                        System.out.println(assignable);
 
                     }
 //                    if (objects.size()>0)
-                        schedulingGroupsForThisNeeded.put(newTakableClass, objects);
+                    schedulingGroupsForThisNeeded.put(newTakableClass, objects);
+                }
+
+                ArrayList<Class> classes1 = new ArrayList<>();
+
+                for (Map.Entry<Class, ArrayList<ArrayList<AssignClass>>> classArrayListEntry : schedulingGroupsForThisNeeded.entrySet()) {
+
+                    Class key = classArrayListEntry.getKey();
+                    ArrayList<ArrayList<AssignClass>> value = classArrayListEntry.getValue();
+
+                    for (Map.Entry<Class, ArrayList<ArrayList<AssignClass>>> arrayListEntry : schedulingGroupsForThisNeeded.entrySet()) {
+                        Class key1 = arrayListEntry.getKey();
+                        ArrayList<ArrayList<AssignClass>> value1 = arrayListEntry.getValue();
+                        if (value == value1) {
+
+                            if (!classes1.contains(key))
+                                classes1.add(key);
+
+                            if (!classes1.contains(key1))
+                                classes1.add(key1);
+
+
+                        }
+
+
+                    }
 
                 }
+
+                if (classes1.size() > 0)
+                    gout(classes1);
 
                 //todo from here left
 
@@ -238,7 +274,7 @@ public class ExcelReader {
                     sumtakableCap += aClass.getCapacity();
                 }
                 if (sumtakableCap < school.getCapacityOfSchool().getCap()) {
-                    throw new RuntimeException("king in the north");
+//                    throw new RuntimeException("king in the north");
                 }
 
                 int i = sumtakableCap / assignableClasses.size();
@@ -248,30 +284,81 @@ public class ExcelReader {
 
                     ArrayList<ArrayList<AssignClass>> sgAssigneds = schedulingGroupsForThisNeeded.get(assignableClass);
 
-                    if (sgAssigneds.size() == 0) {
-                        gout(sgAssigneds);
-                        continue;
-                    }
+                    System.out.println(sgAssigneds.size());
 
-                    for (ArrayList<AssignClass> sgAssigned : sgAssigneds) {
-                        int assignedCap = sgAssigned.get(0).getAssignedCap();
+                    int assignableClassCapacity = assignableClass.getCapacity() - 0/*globalassigns.cap*/;
 
-                        int assignableClassCapacity = assignableClass.getCapacity() - 0/*globalassigns.cap*/;
+
+                    for (ArrayList<AssignClass> sgs : sgAssigneds) {
+
+                        int sgCap = sgs.get(0).getAssignedCap();
+
+                        if (sgCap > assignableClassCapacity) {
+
+                            taper = 3;
+                            while (true) {
+                                int sum = 0;
+                                int sumOfThis = 0;
+                                capOfTakables = new ArrayList<>();
+                                assignClasses = new ArrayList<>();
+
+
+                                for (Class newTakableClass : newTakableClasses) {
+
+                                    int minesGlobal = 0;
+
+                                    for (AssignClass globalassignClass : globalassignClasses) {
+                                        String id = globalassignClass.getId();
+                                        if (id.equals(newTakableClass.getId())) {
+                                            minesGlobal = globalassignClass.getAssignedCap();
+                                            break;
+                                        }
+                                    }
+
+                                    AssignClass assignClass = new AssignClass();
+                                    assignClass.setCourseId(newTakableClass.getCourseId())
+                                            .setGroup(newTakableClass.getGroup())
+                                            .setCourseName(newTakableClass.getName())
+                                            .setId(assignClass.getCourseId() + "__" + assignClass.getGroup())
+                                            .setTimes(newTakableClass.getTimes())
+                                    ;
+
+                                    int capacity = newTakableClass.getCapacity() - minesGlobal;
+                                    if (capacity < 1)
+                                        continue;
+
+                                    int dividedCap = (int) (capacity / taper);
+
+                                    assignClass.setAssignedCap(dividedCap);
+                                    sumOfThis += dividedCap;
+
+                                    assignClasses.add(assignClass);
+
+                                    capOfTakables.add(capacity);
+                                    sum += capacity;
+
+                                    if (sumOfThis >= neededCap) {
+                                        dividedCap = dividedCap - (sumOfThis - neededCap);
+                                        assignClass.setAssignedCap(dividedCap);
+                                        break;
+                                    }
+                                }
+
+                                if (sumOfThis >= neededCap) {
+                                    break;
+                                } else {
+                                    taper /= 1.2;
+                                }
+//                        System.out.println(sumOfThis);
+
+                            }
+
+                        }
 
                     }
 
 
                 }
-
-
-//                schedulingGroupsForThisNeeded
-
-
-                for (ArrayList<AssignClass> schedulingGroup : schedulingGroups) {
-
-                }
-                System.out.println(allCap);
-
 
             }
 
