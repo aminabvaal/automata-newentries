@@ -2,8 +2,8 @@ package ir.ac.aut.god.automatanewentries;
 
 import java.util.ArrayList;
 
-import static ir.ac.aut.god.automatanewentries.core.ExcelReader.extractConfilicts;
-import static ir.ac.aut.god.automatanewentries.core.ExcelReader.gout;
+import static ir.ac.aut.god.automatanewentries.core.KERNEL.extractConfilicts;
+import static ir.ac.aut.god.automatanewentries.core.KERNEL.gout;
 
 /**
  * created By aMIN on 7/11/2019 1:43 AM

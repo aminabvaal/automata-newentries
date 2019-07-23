@@ -12,7 +12,7 @@ import java.util.*;
 
 import static ir.ac.aut.god.automatanewentries.core.SchoolReader.prepareSchools;
 
-public class ExcelReader {
+public class KERNEL {
 
 
     public static void gout(Object object) {
