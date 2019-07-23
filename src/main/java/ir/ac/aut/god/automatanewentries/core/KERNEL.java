@@ -175,6 +175,7 @@ public class KERNEL {
 
             }
 
+
             for (AssignClass assignClass : assignClasses) {
                 ArrayList<AssignClass> assignClasses1 = new ArrayList<>();
                 assignClasses1.add(assignClass);
@@ -191,16 +192,18 @@ public class KERNEL {
 
                 neededCap = awdicapSchool + pardiscap;
 
-                ArrayList<ProgramGroup> programGroups = new ArrayList<>();
+
+                ArrayList<ProgramGroup> programGroupsId = new ArrayList<>();
+
                 ArrayList<ArrayList<AssignClass>> schedulingGroups = school.getSchedulingGroups();
                 for (int i = 0; i < schedulingGroups.size(); i++) {
                     ArrayList<AssignClass> schedulingGroup = schedulingGroups.get(i);
-                    ProgramGroup programGroup = new ProgramGroup().setId(i).setHadAssignClasses(schedulingGroup);
-                    programGroups.add(programGroup);
+                    ProgramGroup programGroup = new ProgramGroup()
+                            .setId(i)
+                            .setHadAssignClasses(schedulingGroup);
 
+                    programGroupsId.add(programGroup);
                 }
-
-
 
 
                 ArrayList<Class> newAssignableClasses = new ArrayList<>();
@@ -210,10 +213,16 @@ public class KERNEL {
 
                 HashMap<Class, ArrayList<ArrayList<AssignClass>>> schedulingGroupsForThisNeeded = new HashMap<>();
 
-                ArrayList<ArrayList<Class>> reverseschedulingGroupsForThisNeeded = new ArrayList<>();
+                HashMap<Class, ArrayList<ProgramGroup>> takableAndProgramGroups = new HashMap<>();
+                HashMap<ProgramGroup, ArrayList<Class>> programGroupAndTakables = new HashMap<>();
+
+                Set<Class> classes2 = takableAndProgramGroups.keySet();
+                System.out.println(classes2.size());
+
 
                 for (Class newTakableClass : newTakableClasses) {
                     ArrayList<ArrayList<AssignClass>> objects = new ArrayList<>();
+                    ArrayList<ProgramGroup> programGroups = new ArrayList<>();
 
                     for (ArrayList<AssignClass> schedulingGroup : schedulingGroups) {
 
@@ -227,42 +236,172 @@ public class KERNEL {
                                 break;
                             }
                         }
-                        if (assignable)
+                        if (assignable) {
+                            Optional<ProgramGroup> first = programGroupsId.stream()
+                                    .filter(programGroup -> programGroup.getHadAssignClasses() == schedulingGroup).findFirst();
+                            ProgramGroup programGroup = first.get();
+                            programGroups.add(programGroup);
                             objects.add(schedulingGroup);
+                        }
 
                     }
 //                    if (objects.size()>0)
+                    if (programGroups.size() > 0)
+                        takableAndProgramGroups.put(newTakableClass, programGroups);
                     schedulingGroupsForThisNeeded.put(newTakableClass, objects);
                 }
 
-                ArrayList<Class> classes1 = new ArrayList<>();
 
-                for (Map.Entry<Class, ArrayList<ArrayList<AssignClass>>> classArrayListEntry : schedulingGroupsForThisNeeded.entrySet()) {
+                for (Map.Entry<Class, ArrayList<ProgramGroup>> classArrayListEntry : takableAndProgramGroups.entrySet()) {
 
                     Class key = classArrayListEntry.getKey();
-                    ArrayList<ArrayList<AssignClass>> value = classArrayListEntry.getValue();
+                    ArrayList<ProgramGroup> value = classArrayListEntry.getValue();
 
-                    for (Map.Entry<Class, ArrayList<ArrayList<AssignClass>>> arrayListEntry : schedulingGroupsForThisNeeded.entrySet()) {
-                        Class key1 = arrayListEntry.getKey();
-                        ArrayList<ArrayList<AssignClass>> value1 = arrayListEntry.getValue();
-                        if (value == value1) {
 
-                            if (!classes1.contains(key))
+                    for (ProgramGroup programGroup : value) {
+                        if (!programGroupAndTakables.containsKey(programGroup)) {
+                            ArrayList<Class> classes1 = new ArrayList<>();
+                            classes1.add(key);
+                            programGroupAndTakables.put(programGroup, classes1);
+                        } else {
+                            ArrayList<Class> classes1 = programGroupAndTakables.get(programGroup);
+                            if (!classes1.contains(key)) {
                                 classes1.add(key);
-
-                            if (!classes1.contains(key1))
-                                classes1.add(key1);
-
-
+                            } else {
+                                System.out.println("sout");
+                            }
                         }
+                    }
+
+
+                }
+
+
+                //todo implementation from here
+
+                for (Map.Entry<ProgramGroup, ArrayList<Class>> programGroupArrayListEntry : programGroupAndTakables.entrySet()) {
+
+                    ProgramGroup programGroup = programGroupArrayListEntry.getKey();
+                    ArrayList<Class> assignableClasses = programGroupArrayListEntry.getValue();
+                    ArrayList<Class> littleCapAssignableClasses = new ArrayList<>();
+
+                    int assignedCapToGroup = programGroup.getHadAssignClasses().get(0).getAssignedCap();
+
+
+                    taper = 1;
+                    while (true)//todo implement other time for better performance and considerations
+                    {
+                        for (Class assignableClass : assignableClasses)
+                            if (assignedCapToGroup <= (assignableClass.getCapacity() / taper - 0/*todo globalAssignaedSizeOofthisClass*/))
+                                littleCapAssignableClasses.add(assignableClass);
+
+                        break;
+                    }
+
+                    if (littleCapAssignableClasses.size() > 0) {
+                        int randomAssigning = (int) ((littleCapAssignableClasses.size() - 1) * Math.random());
+
+                        Class randomAssignClassToThisSg = littleCapAssignableClasses.get(randomAssigning);
+                        ArrayList<AssignClass> hadAssignClasses = programGroup.getHadAssignClasses();
+
+
+                        AssignClass assignClass = new AssignClass();
+
+                        double v = randomAssignClassToThisSg.getCapacity() / taper;
+
+                        assignClass.setCourseId(randomAssignClassToThisSg.getCourseId())
+                                .setGroup(randomAssignClassToThisSg.getGroup())
+                                .setCourseName(randomAssignClassToThisSg.getName())
+                                .setId(assignClass.getCourseId() + "__" + assignClass.getGroup())
+                                .setAssignedCap(assignedCapToGroup)
+                                .setTimes(randomAssignClassToThisSg.getTimes())
+                        ;
+
+                        hadAssignClasses.add(assignClass);
+
+                        continue;
+                    }
+                    /**
+                     * splitting this programGroup to some of assignable classes ;
+                     * k from n class selection possible
+                     */
+                    int k = ((int) (assignableClasses.size() * Math.random()));
+                    ArrayList<Class> newnewAssignableClasses = new ArrayList<>();
+                    while (k == newnewAssignableClasses.size()) {
+                        Class e = assignableClasses.get(((int) (assignableClasses.size() * Math.random())) - 1);
+                        if (!newnewAssignableClasses.contains(e))
+                            newnewAssignableClasses.add(e);
+                    }
+
+
+
+
+
+
+
+
+
+
+                    taper = 3;
+                    while (true) {
+                        int sum = 0;
+                        int sumOfThis = 0;
+                        capOfTakables = new ArrayList<>();
+                        assignClasses = new ArrayList<>();
+
+
+                        for (Class assignableClass : assignableClasses) {
+
+                            AssignClass assignClass = new AssignClass();
+                            assignClass.setCourseId(assignableClass.getCourseId())
+                                    .setGroup(assignableClass.getGroup())
+                                    .setCourseName(assignableClass.getName())
+                                    .setId(assignClass.getCourseId() + "__" + assignClass.getGroup())
+                                    .setTimes(assignableClass.getTimes())
+                            ;
+
+                            int capacity = assignableClass.getCapacity();
+                            if (capacity < 1)
+                                continue;
+
+                            int dividedCap = (int) (capacity / taper);
+
+
+                            assignClass.setAssignedCap(dividedCap);
+
+                            sumOfThis += dividedCap;
+
+                            assignClasses.add(assignClass);
+                            capOfTakables.add(capacity);
+                            sum += capacity;
+
+                            if (sumOfThis >= neededCap) {
+                                dividedCap = dividedCap - (sumOfThis - neededCap);
+                                assignClass.setAssignedCap(dividedCap);
+                                break;
+                            }
+                        }
+
+                        if (sumOfThis >= neededCap) {
+                            break;
+                        } else {
+                            taper /= 1.2;
+                        }
+//                        System.out.println(sumOfThis);
+
+                    }
+
+
+                    for (Class assignableClass : assignableClasses) {
+                        int capacity = assignableClass.getCapacity();
+                        int capperG = capacity / 3;
 
 
                     }
 
+
                 }
 
-                if (classes1.size() > 0)
-                    gout(classes1);
 
                 //todo from here left
 
