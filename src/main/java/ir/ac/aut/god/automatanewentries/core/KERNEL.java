@@ -25,10 +25,11 @@ public class KERNEL {
 
     public static void exit() {
         System.exit(0);
-
     }
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
+
+
         ArrayList<AssignClass> globalassignClasses = new ArrayList<>();
 
         ArrayList<CapacityOfSchool> caps = capsOfSchools();
@@ -183,6 +184,19 @@ public class KERNEL {
             }
 
 
+            ArrayList<ProgramGroup> programGroupsId = new ArrayList<>();
+
+            ArrayList<ArrayList<AssignClass>> schedulingGroups = school.getSchedulingGroups();
+            for (int i = 0; i < schedulingGroups.size(); i++) {
+                ArrayList<AssignClass> schedulingGroup = schedulingGroups.get(i);
+                ProgramGroup programGroup = new ProgramGroup()
+                        .setId(i)
+                        .setHadAssignClasses(schedulingGroup);
+
+                programGroupsId.add(programGroup);
+            }
+
+
             for (NeededClass neededClass : neededClasses) {
 
                 ArrayList<Class> newTakableClasses = getEarlyTimeOfCourses(takableClasses, neededClass);
@@ -192,24 +206,6 @@ public class KERNEL {
 
                 neededCap = awdicapSchool + pardiscap;
 
-
-                ArrayList<ProgramGroup> programGroupsId = new ArrayList<>();
-
-                ArrayList<ArrayList<AssignClass>> schedulingGroups = school.getSchedulingGroups();
-                for (int i = 0; i < schedulingGroups.size(); i++) {
-                    ArrayList<AssignClass> schedulingGroup = schedulingGroups.get(i);
-                    ProgramGroup programGroup = new ProgramGroup()
-                            .setId(i)
-                            .setHadAssignClasses(schedulingGroup);
-
-                    programGroupsId.add(programGroup);
-                }
-
-
-                ArrayList<Class> newAssignableClasses = new ArrayList<>();
-
-
-//                HashMap<Class, ArrayList<AssignClass>> schedulingGroupsForThisNeeded = new HashMap<>();
 
                 HashMap<Class, ArrayList<ArrayList<AssignClass>>> schedulingGroupsForThisNeeded = new HashMap<>();
 
@@ -312,7 +308,7 @@ public class KERNEL {
                         assignClass.setCourseId(randomAssignClassToThisSg.getCourseId())
                                 .setGroup(randomAssignClassToThisSg.getGroup())
                                 .setCourseName(randomAssignClassToThisSg.getName())
-                                .setId(assignClass.getCourseId() + "__" + assignClass.getGroup())
+                                .setId(randomAssignClassToThisSg.getCourseId() + "__" + randomAssignClassToThisSg.getGroup())
                                 .setAssignedCap(assignedCapToGroup)
                                 .setTimes(randomAssignClassToThisSg.getTimes())
                         ;
@@ -321,183 +317,107 @@ public class KERNEL {
 
                         continue;
                     }
+
+
+                    HashMap<ProgramGroup, ArrayList<ProgramGroup>> splitPgToPgs = new HashMap<>();
+
                     /**
                      * splitting this programGroup to some of assignable classes ;
                      * k from n class selection possible
-                     */
-                    int k = ((int) (assignableClasses.size() * Math.random()));
+                     **/
+
+                    int capOfPg = programGroup.getHadAssignClasses().get(0).getAssignedCap();
+                    int sumcapOfNewPgs = 0;
+
+
+                    int size = assignableClasses.size();
+                    int k = ((int) ((size / 2) * Math.random())) + size / 2;//todo change this policy assigning
+
+
                     ArrayList<Class> newnewAssignableClasses = new ArrayList<>();
-                    while (k == newnewAssignableClasses.size()) {
-                        Class e = assignableClasses.get(((int) (assignableClasses.size() * Math.random())) - 1);
-                        if (!newnewAssignableClasses.contains(e))
-                            newnewAssignableClasses.add(e);
-                    }
+                    ArrayList<ProgramGroup> programGroups = new ArrayList<>();
 
 
-
-
-
-
-
-
-
-
-                    taper = 3;
-                    while (true) {
-                        int sum = 0;
-                        int sumOfThis = 0;
-                        capOfTakables = new ArrayList<>();
-                        assignClasses = new ArrayList<>();
-
+                    while (sumcapOfNewPgs == capOfPg) {
 
                         for (Class assignableClass : assignableClasses) {
 
-                            AssignClass assignClass = new AssignClass();
-                            assignClass.setCourseId(assignableClass.getCourseId())
-                                    .setGroup(assignableClass.getGroup())
-                                    .setCourseName(assignableClass.getName())
-                                    .setId(assignClass.getCourseId() + "__" + assignClass.getGroup())
-                                    .setTimes(assignableClass.getTimes())
-                            ;
 
-                            int capacity = assignableClass.getCapacity();
-                            if (capacity < 1)
-                                continue;
-
-                            int dividedCap = (int) (capacity / taper);
+                            if (!newnewAssignableClasses.contains(assignableClass)) {
 
 
-                            assignClass.setAssignedCap(dividedCap);
+                                int minesGlobal = 0;
 
-                            sumOfThis += dividedCap;
-
-                            assignClasses.add(assignClass);
-                            capOfTakables.add(capacity);
-                            sum += capacity;
-
-                            if (sumOfThis >= neededCap) {
-                                dividedCap = dividedCap - (sumOfThis - neededCap);
-                                assignClass.setAssignedCap(dividedCap);
-                                break;
-                            }
-                        }
-
-                        if (sumOfThis >= neededCap) {
-                            break;
-                        } else {
-                            taper /= 1.2;
-                        }
-//                        System.out.println(sumOfThis);
-
-                    }
-
-
-                    for (Class assignableClass : assignableClasses) {
-                        int capacity = assignableClass.getCapacity();
-                        int capperG = capacity / 3;
-
-
-                    }
-
-
-                }
-
-
-                //todo from here left
-
-                System.out.println(schedulingGroupsForThisNeeded.size());
-
-                Set<Class> assignableClasses = schedulingGroupsForThisNeeded.keySet();
-                int sumtakableCap = 0;
-                for (Class aClass : assignableClasses) {
-                    sumtakableCap += aClass.getCapacity();
-                }
-                if (sumtakableCap < school.getCapacityOfSchool().getCap()) {
-//                    throw new RuntimeException("king in the north");
-                }
-
-                int i = sumtakableCap / assignableClasses.size();
-
-
-                for (Class assignableClass : assignableClasses) {
-
-                    ArrayList<ArrayList<AssignClass>> sgAssigneds = schedulingGroupsForThisNeeded.get(assignableClass);
-
-                    System.out.println(sgAssigneds.size());
-
-                    int assignableClassCapacity = assignableClass.getCapacity() - 0/*globalassigns.cap*/;
-
-
-                    for (ArrayList<AssignClass> sgs : sgAssigneds) {
-
-                        int sgCap = sgs.get(0).getAssignedCap();
-
-                        if (sgCap > assignableClassCapacity) {
-
-                            taper = 3;
-                            while (true) {
-                                int sum = 0;
-                                int sumOfThis = 0;
-                                capOfTakables = new ArrayList<>();
-                                assignClasses = new ArrayList<>();
-
-
-                                for (Class newTakableClass : newTakableClasses) {
-
-                                    int minesGlobal = 0;
-
-                                    for (AssignClass globalassignClass : globalassignClasses) {
-                                        String id = globalassignClass.getId();
-                                        if (id.equals(newTakableClass.getId())) {
-                                            minesGlobal = globalassignClass.getAssignedCap();
-                                            break;
-                                        }
-                                    }
-
-                                    AssignClass assignClass = new AssignClass();
-                                    assignClass.setCourseId(newTakableClass.getCourseId())
-                                            .setGroup(newTakableClass.getGroup())
-                                            .setCourseName(newTakableClass.getName())
-                                            .setId(assignClass.getCourseId() + "__" + assignClass.getGroup())
-                                            .setTimes(newTakableClass.getTimes())
-                                    ;
-
-                                    int capacity = newTakableClass.getCapacity() - minesGlobal;
-                                    if (capacity < 1)
-                                        continue;
-
-                                    int dividedCap = (int) (capacity / taper);
-
-                                    assignClass.setAssignedCap(dividedCap);
-                                    sumOfThis += dividedCap;
-
-                                    assignClasses.add(assignClass);
-
-                                    capOfTakables.add(capacity);
-                                    sum += capacity;
-
-                                    if (sumOfThis >= neededCap) {
-                                        dividedCap = dividedCap - (sumOfThis - neededCap);
-                                        assignClass.setAssignedCap(dividedCap);
+                                for (AssignClass globalassignClass : globalassignClasses) {
+                                    String id = globalassignClass.getId();
+                                    if (id.equals(assignableClass.getId())) {
+                                        minesGlobal = globalassignClass.getAssignedCap();
                                         break;
                                     }
                                 }
 
-                                if (sumOfThis >= neededCap) {
-                                    break;
-                                } else {
-                                    taper /= 1.2;
+
+                                int capacity = assignableClass.getCapacity() - minesGlobal;
+                                if (capacity < 1)
+                                    continue;
+
+
+                                int dividedCap = (int) (capacity / taper);
+
+                                sumcapOfNewPgs += dividedCap;
+
+
+                                newnewAssignableClasses.add(assignableClass);
+
+                                ProgramGroup programGroup1 = new ProgramGroup();
+                                programGroup1.setId((int) (1000000000 * Math.random()));
+
+                                ArrayList<AssignClass> has = new ArrayList<>();
+                                //cloning objects not to make mistake
+                                for (AssignClass hadAssignClass : programGroup.getHadAssignClasses()) {
+                                    has.add(hadAssignClass);
                                 }
-//                        System.out.println(sumOfThis);
+
+
+                                AssignClass assignClass = new AssignClass().setCourseId(assignableClass.getCourseId())
+                                        .setCourseName(assignableClass.getName())
+                                        .setGroup(assignableClass.getGroup())
+                                        .setId(assignableClass.getCourseId() + "__" + assignableClass.getGroup())
+
+                                        .setAssignedCap(dividedCap);
+
+
+                                for (AssignClass globalassignClass : globalassignClasses) {
+                                    String id = globalassignClass.getId();
+                                    if (id.equals(assignClass.getId())) {
+                                        int newcap = assignClass.getAssignedCap() + globalassignClass.getAssignedCap();
+                                        globalassignClass.setAssignedCap(newcap);
+                                        break;
+                                    }
+                                }
+                                globalassignClasses.add(assignClass);
+
+
+                                has.add(assignClass);
+                                programGroup1.setHadAssignClasses(has);
+                                programGroups.add(programGroup1);
+
 
                             }
 
+
                         }
+
 
                     }
 
 
+                    splitPgToPgs.put(programGroup, programGroups);
+
+
+                    gout(null);
                 }
+
 
             }
 
@@ -635,18 +555,6 @@ public class KERNEL {
         gout(schools);
         exit();
 
-
-//        ArrayList<CapacityOfSchool> caps = capsOfSchools();
-
-
-//        prepareSchools();
-//        System.exit(0);
-//
-
-
-        //    s();
-//        cap();
-        System.exit(0);
 
     }
 
@@ -992,6 +900,8 @@ public class KERNEL {
 
                 aClass
                         .setCapacity(Integer.parseInt(capacity))
+                        .setCapPreSchool(Integer.parseInt(capacity) / 2)
+                        .setDynamicCap(0)
                         .setMaxCapacity(Integer.parseInt(capacity))
                         .setMinCapacity(Integer.parseInt(capacity))
                         .setBlankCapacity(Integer.parseInt((capacity)))

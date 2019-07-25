@@ -28,6 +28,7 @@ public class Class {
     private ExamTime examTime;
     private int capacity;
     private int dynamicCap;
+    private int capPreSchool;
     private int blankCapacity;
     private int maxCapacity;
     private int minCapacity;
